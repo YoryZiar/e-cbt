@@ -7,47 +7,55 @@ import Swal from "sweetalert2";
 
 function TesPageContent() {
     const [activeQuestion, setActiveQuestion] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState(false);
+    const [selectedAnswer, setSelectedAnswer] = useState('');
     const [checked, setChecked] = useState(false);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
     const [showResult, setShowResult] = useState(false);
-    const [result, setResult] = useState({
-        score: 0,
-        correctAnswers: 0,
-        wrongAnswers: 0,
-    });
+    const [point, setPoint] = useState(0);
+    const [rate, setRate] = useState('');
 
     const { questions } = quiz;
-    const { question, answers, correctAnswer } = questions[activeQuestion];
+    const { question, answers } = questions[activeQuestion];
 
     //   Select and check answer
     const onAnswerSelected = (answer: string, idx: any) => {
         setChecked(true);
         setSelectedAnswerIndex(idx);
-        if (answer === correctAnswer) {
-            setSelectedAnswer(true);
-            console.log('true');
-        } else {
-            setSelectedAnswer(false);
-            console.log('false');
-        }
+        setSelectedAnswer(answer)
     };
 
     // Calculate score and increment to next question
     const nextQuestion = () => {
         setSelectedAnswerIndex(null);
-        setResult((prev) =>
-            selectedAnswer
-                ? {
-                    ...prev,
-                    score: prev.score + 5,
-                    correctAnswers: prev.correctAnswers + 1,
-                }
-                : {
-                    ...prev,
-                    wrongAnswers: prev.wrongAnswers + 1,
-                }
-        );
+
+        if (selectedAnswerIndex === 0) {
+            setPoint(point + 3)
+        } else if (selectedAnswerIndex === 1) {
+            setPoint(point + 6)
+        }else if (selectedAnswerIndex === 2) {
+            setPoint(point + 8)
+        }else if (selectedAnswerIndex === 3) {
+            setPoint(point + 10)
+        }
+
+        if (point < 37) {
+            setRate("Ringan")
+        } else if (point < 73) {
+            setRate("Sedang")
+        } else {
+            setRate("Berat")
+        }
+        
+        // setResult((prev) =>
+        //     selectedAnswer
+        //         ? {
+        //             ...prev,
+        //             score: prev.score + 5,
+        //         }
+        //         : {
+        //             ...prev,
+        //         }
+        // );
         if (activeQuestion !== questions.length - 1) {
             setActiveQuestion((prev) => prev + 1);
         } else {
@@ -58,18 +66,18 @@ function TesPageContent() {
     };
 
     return (
-        <div className="mx-auto text-white px-5 md:max-w-md lg:max-w-md">
+        <div className="mx-auto text-slate-200 px-5 md:max-w-md lg:max-w-lg">
             {!showResult ? (
                 <div>
                     <h1>Pertanyaan: {activeQuestion + 1} <span>/{questions.length}</span></h1>
                     <div className="flex flex-col">
-                        <h3 className="my-4">{questions[activeQuestion].question}</h3>
+                        <h3 className="my-4 lg:text-lg">{questions[activeQuestion].question}</h3>
                         {answers.map((answer, idx) => (
                             <li
                                 key={idx}
                                 onClick={() => onAnswerSelected(answer, idx)}
                                 className={
-                                    selectedAnswerIndex === idx ? 'list-none text-center my-2 py-3 rounded-xl  font-semibold bg-primary text-white' : 'list-none text-center my-2 bg-[#b3aaff] py-3 rounded-xl text-primary font-semibold hover:bg-primary hover:text-white hover:cursor-pointer'
+                                    selectedAnswerIndex === idx ? 'list-none text-center my-2 py-3 rounded-xl  font-semibold bg-primary text-white ring-2 ring-[#b3aaff]' : 'list-none text-center my-2 bg-[#b3aaff] py-3 rounded-xl text-primary font-semibold hover:bg-primary hover:text-white hover:cursor-pointer'
                                 }
                             >
                                 <span>{answer}</span>
@@ -89,7 +97,7 @@ function TesPageContent() {
                 </div>
             ) : (
                 <div className='container'>
-                    <h3 className="text-3xl text-center font-semibold">Results</h3>
+                    <h3 className="text-3xl text-center font-semibold">Results: {rate}</h3>
                     <Link href="/">
                         <button className="block mx-auto my-5 bg-primary py-3 rounded-xl w-full text-2xl font-semibold">Save</button>
                     </Link>
