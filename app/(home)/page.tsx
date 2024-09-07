@@ -15,7 +15,7 @@ function HomeContent() {
                     </div>
                     <div className="lg:block lg:w-3/4 lg:mx-auto">
                         <Link href="/quiz" className='bg-white px-5 py-2 text-3xl rounded-xl font-medium text-primary lg:block lg:w-1/2 lg:mx-auto text-center lg:text-4xl lg:font-semibol'>
-                            Start
+                            Ikuti Tes
                         </Link>
                     </div>
                 </div>

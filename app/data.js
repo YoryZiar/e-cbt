@@ -61,5 +61,17 @@ export const quiz = {
             answers: ['Tidak Pernah', 'Kadang-kadang', 'Sering', 'Selalu'],
             correctAnswer: 'Paris',
         },
+        {
+            id: 11,
+            question: 'Apakah anda pernah memikirkan untuk melakukan balas dendam?',
+            answers: ['Tidak Pernah', 'Kadang-kadang', 'Sering', 'Selalu'],
+            correctAnswer: 'Paris',
+        },
+        {
+            id: 12,
+            question: 'Apakah anda pernah mengalami bullying, dan mendapatkan tindakan kekerasan secara fisik atau mental?',
+            answers: ['Tidak Pernah', 'Kadang-kadang', 'Sering', 'Selalu'],
+            correctAnswer: 'Paris',
+        },
     ]
 }
