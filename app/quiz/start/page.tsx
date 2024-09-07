@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import React, { use, useState } from "react"
-import { quiz } from "../data"
+import { quiz } from "../../data"
+import Swal from "sweetalert2";
 
 function TesPageContent() {
     const [activeQuestion, setActiveQuestion] = useState(0);
@@ -90,7 +91,7 @@ function TesPageContent() {
                 <div className='container'>
                     <h3 className="text-3xl text-center font-semibold">Results</h3>
                     <Link href="/">
-                    <button className="block mx-auto my-5 bg-primary py-3 rounded-xl w-full text-2xl font-semibold">Save</button>
+                        <button className="block mx-auto my-5 bg-primary py-3 rounded-xl w-full text-2xl font-semibold">Save</button>
                     </Link>
                 </div>
             )}
