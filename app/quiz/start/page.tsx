@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { use, useState } from "react"
 import { quiz } from "../../data"
 import Swal from "sweetalert2";
+import withReactContent from 'sweetalert2-react-content'
+import Identity from "@/app/identity/page";
 
 function TesPageContent() {
     const [activeQuestion, setActiveQuestion] = useState(0);
@@ -31,11 +33,11 @@ function TesPageContent() {
         if (selectedAnswerIndex === 0) {
             setPoint(point + 3)
         } else if (selectedAnswerIndex === 1) {
-            setPoint(point + 6)
-        }else if (selectedAnswerIndex === 2) {
-            setPoint(point + 8)
-        }else if (selectedAnswerIndex === 3) {
-            setPoint(point + 10)
+            setPoint(point + 5)
+        } else if (selectedAnswerIndex === 2) {
+            setPoint(point + 7)
+        } else if (selectedAnswerIndex === 3) {
+            setPoint(point + 9)
         }
 
         if (point < 37) {
@@ -45,7 +47,7 @@ function TesPageContent() {
         } else {
             setRate("Berat")
         }
-        
+
         // setResult((prev) =>
         //     selectedAnswer
         //         ? {
@@ -64,6 +66,46 @@ function TesPageContent() {
         }
         setChecked(false);
     };
+
+    const MySwal = withReactContent(Swal);
+    async function showFormIdendtity() {
+        const { value: formValues } = await MySwal.fire({
+            confirmButtonColor: "#b91c1c",
+            html: (
+                <Identity />
+            ),
+            focusConfirm: false,
+            preConfirm: () => {
+                // Dapatkan elemen input untuk username dan password
+                const namaInput = Swal.getPopup()?.querySelector('#nama') as HTMLInputElement | null;
+                const emailInput = Swal.getPopup()?.querySelector('#email') as HTMLInputElement | null;
+                const noTelpInput = Swal.getPopup()?.querySelector('#noTelp') as HTMLInputElement | null;
+
+                // Cek apakah elemen input ada
+                if (!namaInput || !emailInput || !noTelpInput) {
+                    Swal.showValidationMessage('Nama, Email, dan No Telp masih kosong!');
+                    return null;
+                }
+
+                const nama = namaInput.value;
+                const email = emailInput.value;
+                const noTelp = noTelpInput.value;
+
+                // Cek jika username atau password kosong
+                if (!nama || !email || !noTelp) {
+                    Swal.showValidationMessage('Silahkan masukkan nama and email');
+                    return null;
+                }
+
+                return { nama, email, noTelp };
+            }
+        });
+
+        if (formValues) {
+            Swal.fire(JSON.stringify(formValues));
+        }
+    }
+
 
     return (
         <div className="mx-auto text-slate-200 px-5 md:max-w-md lg:max-w-lg">
@@ -97,10 +139,9 @@ function TesPageContent() {
                 </div>
             ) : (
                 <div className='container'>
-                    <h3 className="text-3xl text-center font-semibold">Results: {rate}</h3>
-                    <Link href="/">
-                        <button className="block mx-auto my-5 bg-primary py-3 rounded-xl w-full text-2xl font-semibold">Save</button>
-                    </Link>
+                    <h3 className="text-3xl text-center font-semibold uppercase">{rate}</h3>
+                    <p className="text-sm lg:text-lg text-center font-normal">Kamu mengalami tingkat stres yang {rate}. untuk meringankannya ayo ikuti terapi!</p>
+                    <button onClick={showFormIdendtity} className="block mx-auto my-5 bg-primary py-2 w-1/2 rounded-xl text-lg font-semibold">Kirim Hasil</button>
                 </div>
             )}
         </div>
