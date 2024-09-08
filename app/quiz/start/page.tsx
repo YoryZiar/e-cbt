@@ -6,13 +6,14 @@ import { quiz } from "../../data"
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content'
 import Identity from "@/app/identity/page";
+import { useRouter } from 'next/navigation'
 
 function TesPageContent() {
     const [activeQuestion, setActiveQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState('');
     const [checked, setChecked] = useState(false);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-    const [showResult, setShowResult] = useState(false);
+    const [showResult, setShowResult] = useState(true);
     const [point, setPoint] = useState(0);
     const [rate, setRate] = useState('');
 
@@ -68,6 +69,8 @@ function TesPageContent() {
     };
 
     const MySwal = withReactContent(Swal);
+    const router = useRouter()
+
     async function showFormIdendtity() {
         const { value: formValues } = await MySwal.fire({
             confirmButtonColor: "#b91c1c",
@@ -102,7 +105,15 @@ function TesPageContent() {
         });
 
         if (formValues) {
-            Swal.fire(JSON.stringify(formValues));
+            const { isConfirmed } = await Swal.fire({
+                title: 'Data Berhasil dikirim',
+                // text: 'Do you want to continue',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            })
+            if (isConfirmed) {
+                router.push('/therapy')
+            }
         }
     }
 
