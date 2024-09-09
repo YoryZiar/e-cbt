@@ -13,7 +13,7 @@ function TesPageContent() {
     const [selectedAnswer, setSelectedAnswer] = useState('');
     const [checked, setChecked] = useState(false);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-    const [showResult, setShowResult] = useState(true);
+    const [showResult, setShowResult] = useState(false);
     const [point, setPoint] = useState(0);
     const [rate, setRate] = useState('');
 
