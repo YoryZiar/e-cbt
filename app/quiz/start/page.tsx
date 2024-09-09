@@ -13,7 +13,7 @@ function TesPageContent() {
     const [selectedAnswer, setSelectedAnswer] = useState('');
     const [checked, setChecked] = useState(false);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-    const [showResult, setShowResult] = useState(true);
+    const [showResult, setShowResult] = useState(false);
     const [point, setPoint] = useState(0);
     const [rate, setRate] = useState('');
 
@@ -152,7 +152,7 @@ function TesPageContent() {
                 <div className='container'>
                     <h3 className="text-3xl text-center font-semibold uppercase">{rate}</h3>
                     <p className="text-sm lg:text-lg text-center font-normal">Kamu mengalami tingkat stres yang {rate}. untuk meringankannya ayo ikuti terapi!</p>
-                    <button onClick={showFormIdendtity} className="block mx-auto my-5 bg-primary py-2 w-1/2 rounded-xl text-lg font-semibold">Kirim Hasil</button>
+                    <button onClick={showFormIdendtity} className="block mx-auto my-5 bg-primary py-2 w-1/2 rounded-xl text-lg font-semibold uppercase">Terapi Now</button>
                 </div>
             )}
         </div>
