@@ -1,9 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 function HomeContent() {
     return (
-        <section className='max-w-xs lg:max-w-full lg:mx-28 bg-primary mx-auto p-3 lg:p-10 rounded-xl'>
+        <section className='max-w-xs lg:max-w-full lg:mx-28 bg-gradient-to-br from-[#13072e] to-primary mx-auto p-3 lg:p-10 rounded-xl'>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className='w-full text-slate-200'>
                     <h1 className='font-bold text-4xl lg:text-5xl lg:leading-tight font-serif'>Hi! <br /> Wellcome to <br /> TES E-CBT</h1>

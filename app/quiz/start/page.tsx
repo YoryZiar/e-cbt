@@ -117,7 +117,6 @@ function TesPageContent() {
         }
     }
 
-
     return (
         <div className="mx-auto text-slate-200 px-5 md:max-w-md lg:max-w-lg">
             {!showResult ? (

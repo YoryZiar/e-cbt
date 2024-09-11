@@ -7,8 +7,8 @@ function QuizContent() {
                 <div className="bg-hero-image bg-cover w-full h-full"></div>
             </div>
             <div className="p-5">
-                <h1 className="text-slate-200 text-xl font-semibold mb-3">Tes Tingkat Keparahan Stres</h1>
-                <p className="text-slate-200 text-sm mb-6">Tes ini bisa mengukur tingkat stres dalam dirimu. Hasi dari tes ini akan sangat membantu kamu mengetahui keadaan kesehatan mentalmu saat ini.</p>
+                <h1 className="text-slate-200 text-xl font-semibold mb-3">Tes E-CBT</h1>
+                <p className="text-slate-200 text-sm mb-6">Tes E-CBT ini bisa mengukur tingkat dampak bullying yang kamu alami. Hasil dari tes ini akan sangat membantu kamu mengetahui keadaan kesehatan mentalmu saat ini.</p>
                 <Link href="/quiz/start" className="py-2 px-5 bg-[#b3aaff] text-primary font-semibold my-5 rounded-lg">
                 Mulai Tes
                 </Link>
