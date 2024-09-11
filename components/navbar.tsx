@@ -68,7 +68,7 @@ export default function Navbar() {
                     <ul className="block lg:flex">
                         {
                             linkNav.map((link) => (
-                                <li className="group">
+                                <li className="group" key={link.name}>
                                     <Link href={link.link} className="mx-8 flex py-2 text-base text-slate-200 group-hover:text-secondary">
                                         {link.name}
                                     </Link>
