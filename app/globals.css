@@ -19,3 +19,9 @@
 body {
   background: #13072e
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

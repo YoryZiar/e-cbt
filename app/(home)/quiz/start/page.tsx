@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import React, { use, useState } from "react"
-import { quiz } from "../../data"
+import { quiz } from "../../../data"
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content'
-import Identity from "@/app/identity/page";
+import IdentityContent from "@/app/(home)/identity/page";
 import { useRouter } from 'next/navigation'
 
 function TesPageContent() {
@@ -70,51 +70,56 @@ function TesPageContent() {
 
     const MySwal = withReactContent(Swal);
     const router = useRouter()
+    let data = {
+        point,
+        rate
+    }
 
     async function showFormIdendtity() {
         const { value: formValues } = await MySwal.fire({
             confirmButtonColor: "#b91c1c",
             html: (
-                <Identity />
+                <IdentityContent value={data} />
             ),
-            focusConfirm: false,
-            preConfirm: () => {
-                // Dapatkan elemen input untuk username dan password
-                const namaInput = Swal.getPopup()?.querySelector('#nama') as HTMLInputElement | null;
-                const emailInput = Swal.getPopup()?.querySelector('#email') as HTMLInputElement | null;
-                const noTelpInput = Swal.getPopup()?.querySelector('#noTelp') as HTMLInputElement | null;
+            showConfirmButton: false,
+            // focusConfirm: false,
+            // preConfirm: () => {
+            //     // Dapatkan elemen input untuk username dan password
+            //     const namaInput = Swal.getPopup()?.querySelector('#nama') as HTMLInputElement | null;
+            //     const emailInput = Swal.getPopup()?.querySelector('#email') as HTMLInputElement | null;
+            //     const noTelpInput = Swal.getPopup()?.querySelector('#noTelp') as HTMLInputElement | null;
 
-                // Cek apakah elemen input ada
-                if (!namaInput || !emailInput || !noTelpInput) {
-                    Swal.showValidationMessage('Nama, Email, dan No Telp masih kosong!');
-                    return null;
-                }
+            //     // Cek apakah elemen input ada
+            //     if (!namaInput || !emailInput || !noTelpInput) {
+            //         Swal.showValidationMessage('Nama, Email, dan No Telp masih kosong!');
+            //         return null;
+            //     }
 
-                const nama = namaInput.value;
-                const email = emailInput.value;
-                const noTelp = noTelpInput.value;
+            //     const nama = namaInput.value;
+            //     const email = emailInput.value;
+            //     const noTelp = noTelpInput.value;
 
-                // Cek jika username atau password kosong
-                if (!nama || !email || !noTelp) {
-                    Swal.showValidationMessage('Silahkan masukkan nama and email');
-                    return null;
-                }
+            //     // Cek jika username atau password kosong
+            //     if (!nama || !email || !noTelp) {
+            //         Swal.showValidationMessage('Silahkan masukkan nama and email');
+            //         return null;
+            //     }
 
-                return { nama, email, noTelp };
-            }
+            //     return { nama, email, noTelp };
+            // }
         });
 
-        if (formValues) {
-            const { isConfirmed } = await Swal.fire({
-                title: 'Data Berhasil dikirim',
-                // text: 'Do you want to continue',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            })
-            if (isConfirmed) {
-                router.push('/therapy')
-            }
-        }
+        // if (formValues) {
+        //     const { isConfirmed } = await Swal.fire({
+        //         title: 'Data Berhasil dikirim',
+        //         // text: 'Do you want to continue',
+        //         icon: 'success',
+        //         confirmButtonText: 'OK'
+        //     })
+        //     if (isConfirmed) {
+        //         router.push('/therapy')
+        //     }
+        // }
     }
 
     return (
