@@ -9,8 +9,10 @@ export async function authenticate(
     formData: FormData,
 ) {
     try {
-        await signIn('credentials', formData);
-        redirect("/dashboard");
+        const result = await signIn('credentials', formData);
+        if (result) {
+            redirect("/dashboard")
+        }
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

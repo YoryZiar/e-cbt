@@ -1,6 +1,5 @@
 'use client'
 
-import { signIn } from "@/auth"
 import { useFormState } from "react-dom";
 import { authenticate } from "@/app/actions/auth/actions";
 
