@@ -5,7 +5,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <div>
             <AdminNavbar />
-
+            
             <div className="mt-10">
                 {children}
             </div>

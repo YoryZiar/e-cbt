@@ -65,7 +65,9 @@ export async function storeUserResult(formData: FormData) {
 export async function storeUser(
     nama: string,
     email: string,
-    telephone: string
+    telephone: string,
+    score: string,
+    level: string
 ) {
     try {
         const findUser = await prisma.user.findUnique({
@@ -82,17 +84,19 @@ export async function storeUser(
                     telephone: telephone
                 }
             });
-            // const storeResult = await prisma.result.create({
-            //     data: {
-            //         score: formData.get('score') as string,
-            //         level: formData.get('level') as string,
-            //         User: {
-            //             connect: {
-            //                 email: email,
-            //             }
-            //         }
-            //     }
-            // });
+            const storeResult = await prisma.result.create({
+                data: {
+                    score: score,
+                    level: level,
+                    User: {
+                        connect: {
+                            email: email,
+                        }
+                    }
+                }
+            });
+
+            return { message: "Data berhasil disimpan"}
         } else {
             const updateUser = await prisma.user.update({
                 where: {
@@ -104,24 +108,24 @@ export async function storeUser(
                     telephone: telephone
                 }
             });
-            // const storeResult = await prisma.result.create({
-            //     data: {
-            //         score: formData.get('score') as string,
-            //         level: formData.get('level') as string,
-            //         User: {
-            //             connect: {
-            //                 email: email,
-            //             }
-            //         }
-            //     }
-            // });
+            const storeResult = await prisma.result.create({
+                data: {
+                    score: score,
+                    level: level,
+                    User: {
+                        connect: {
+                            email: email,
+                        }
+                    }
+                }
+            });
+
+            return { message: "Data berhasil disimpan"}
         }
     } catch (error) {
-        return console.log(error);
+        console.log(error);
+        return { message: "Database error: Failed to store user"}
     }
-    
-    revalidatePath("/therapy")
-    redirect("/therapy")
 }
 
 export async function deleteUser( id: string ) {
@@ -136,9 +140,7 @@ export async function deleteUser( id: string ) {
                 id
             }
         });
-
         revalidatePath("/dashboard")
-        return { message: "Deleted user"}
     } catch (error) {
         console.log("Database error: " + error);
         return { message: "Database error: Failed to delete user"}

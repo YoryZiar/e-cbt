@@ -115,19 +115,25 @@ function TesPageContent() {
 
         if (formValues) {
             try {
-                const saveUser = await storeUser(formValues.nama, formValues.email, formValues.noTelp)
+                const saveUser = await storeUser(
+                    formValues.nama,
+                    formValues.email,
+                    formValues.noTelp,
+                    score,
+                    level
+                )
 
-                // if (saveUser) {
-                //     const { isConfirmed } = await Swal.fire({
-                //         title: 'Data Berhasil dikirim',
-                //         // text: 'Do you want to continue',
-                //         icon: 'success',
-                //         confirmButtonText: 'OK'
-                //     })
-                //     if (isConfirmed) {
-                //         router.push('/therapy')
-                //     }
-                // }
+                if (saveUser) {
+                    const { isConfirmed } = await Swal.fire({
+                        title: 'Data Berhasil dikirim',
+                        // text: 'Do you want to continue',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    })
+                    if (isConfirmed) {
+                        router.push('/therapy')
+                    }
+                }
             } catch (error) {
                 Swal.fire({
                     title: 'Data Gagal dikirim',

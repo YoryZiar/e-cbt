@@ -1,4 +1,4 @@
-import { getUser } from "@/app/services/user/queries"
+import { getUser, getResult } from "@/app/services/user/queries"
 import { DeleteUser } from "@/components/users/user-button";
 import Swal from "sweetalert2";
 
@@ -9,7 +9,7 @@ export default async function UsersTable({
     query: string,
     currentPages: number
 }) {
-    const users = await getUser();
+    const results = await getResult();
 
     return (
         <div className="container max-w-full md:w-1/2 lg:w-5/6 bg-primary overflow-auto p-5 mx-auto rounded-lg my-5 shadow-lg shadow-slate-300">
@@ -31,13 +31,19 @@ export default async function UsersTable({
                             No. HP
                         </th>
                         <th className="text-primary font-semibold text-center p-3">
+                            score
+                        </th>
+                        <th className="text-primary font-semibold text-center p-3">
+                            rate
+                        </th>
+                        <th className="text-primary font-semibold text-center p-3">
                             Aksi
                         </th>
                     </tr>
                 </thead>
                 <tbody className="border border-primary rounded-md">
-                    {users.map((user) => (
-                        <tr key={user.id}>
+                    {results.map((result) => (
+                        <tr key={result.id}>
                             {/* <td>
                                 <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
                                     1
@@ -45,26 +51,36 @@ export default async function UsersTable({
                             </td> */}
                             <td>
                                 <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
-                                    {user.name}
+                                    {result.User.name}
                                 </div>
                             </td>
                             <td>
                                 <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
-                                    {user.email}
+                                    {result.User.email}
                                 </div>
                             </td>
                             <td>
                                 <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
-                                    {user.telephone}
+                                    {result.User.telephone}
+                                </div>
+                            </td>
+                            <td>
+                                <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
+                                    {result.score}
+                                </div>
+                            </td>
+                            <td>
+                                <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
+                                    {result.level}
                                 </div>
                             </td>
                             <td>
                                 <div className="text-primary font-semibold text-center mx-3 py-3 lg:py-1">
                                     <div className="flex flex-col">
-                                        <button className="py-2 bg-primary rounded-md text-slate-200 mb-2">
+                                        {/* <button className="py-2 bg-primary rounded-md text-slate-200 mb-2">
                                             Detail
-                                        </button>
-                                        <DeleteUser id={user.id} />
+                                        </button> */}
+                                        <DeleteUser id={result.User.id} />
                                     </div>
                                 </div>
                             </td>

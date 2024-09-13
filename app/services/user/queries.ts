@@ -29,3 +29,18 @@ export async function getUserById( id: string ) {
         throw new Error("Failed to get user by id");
     }
 }
+
+export async function getResult() {
+    try {
+        const allResult = await prisma.result.findMany({
+            include: {
+                User: true
+            }
+        });
+
+        return allResult
+    } catch (error) {
+        console.log("Database error: " + error);
+        throw new Error("Failed to get user by id");
+    }
+}
