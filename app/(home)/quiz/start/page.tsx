@@ -72,14 +72,16 @@ function TesPageContent() {
     const router = useRouter()
     let data = {
         point: JSON.stringify(point),
-        rate: JSON.stringify(rate)
+        rate
     }
+    let score = JSON.stringify(point);
+    let level = rate;
 
     async function showFormIdendtity() {
         const { value: formValues } = await MySwal.fire({
             confirmButtonColor: "#b91c1c",
             html: (
-                <IdentityContent value={data} />
+                <IdentityContent score={score} level={level} />
             ),
             showConfirmButton: false,
             // focusConfirm: false,
