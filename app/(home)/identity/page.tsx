@@ -1,6 +1,6 @@
 import { storeUserResult } from "@/app/actions/user/actions"
 
-export default function IdentityContent({ value }) {
+export default function IdentityContent({ value }: {value: any}) {
     return (
         <section className="bg-white max-w-xs lg:max-w-md md:max-w-md mx-auto rounded-xl py-5">
             <h1 className="text-center font-normal text-3xl text-primary">IDENTITY</h1>

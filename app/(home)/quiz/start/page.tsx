@@ -71,8 +71,8 @@ function TesPageContent() {
     const MySwal = withReactContent(Swal);
     const router = useRouter()
     let data = {
-        point,
-        rate
+        point: JSON.stringify(point),
+        rate: JSON.stringify(rate)
     }
 
     async function showFormIdendtity() {
