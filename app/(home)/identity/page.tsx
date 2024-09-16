@@ -1,11 +1,11 @@
-import { storeUserResult } from "@/app/actions/user/actions"
+// import { storeUserResult } from "@/app/actions/user/actions"
 
 export default function IdentityContent() {
     return (
         <section className="bg-white max-w-xs lg:max-w-md md:max-w-md mx-auto rounded-xl py-5">
             <h1 className="text-center font-normal text-3xl text-primary">IDENTITY</h1>
 
-            <form action={storeUserResult} className="mt-5">
+            <form action="" className="mt-5">
                 {/* <input type="hidden" name="score" value={score} />
                 <input type="hidden" name="level" value={level} /> */}
                 <label htmlFor="nama" className="block mx-5">
