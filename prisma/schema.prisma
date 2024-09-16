@@ -15,14 +15,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
-  email     String   @unique
-  telephone String
+  email     String    @unique
+  telephone String?
   password  String?
-  role      Int      @default(1)
+  role      Int       @default(1)
   Result    Result[]
-  createdAt DateTime @default(now())
+  Post      Post[]
+  createdAt DateTime  @default(now())
+  Message   Message[]
 }
 
 model Result {
@@ -31,5 +33,30 @@ model Result {
   User      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
   score     String
   level     String
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id         String    @id @default(cuid())
+  userId     String
+  User       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  title      String
+  content    String    @db.Text
+  createdAt  DateTime  @default(now())
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+  Post Post[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  message   String   @db.Text
   createdAt DateTime @default(now())
 }

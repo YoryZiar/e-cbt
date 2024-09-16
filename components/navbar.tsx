@@ -11,15 +11,15 @@ export default function Navbar() {
     let linkNav = [
         {
             name: 'Beranda',
-            link: '/'
+            link: '#Home'
         },
         {
             name: 'Tentang Kami',
-            link: '/about'
+            link: '#About'
         },
         {
             name: 'Kontak',
-            link: '/contact'
+            link: '#Contact'
         }
     ]
 

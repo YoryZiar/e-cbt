@@ -4,64 +4,6 @@ import prisma from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
-export async function storeUserResult(formData: FormData) {
-    try {
-        const findUser = await prisma.user.findUnique({
-            where: {
-                email: formData.get('email') as string,
-            }
-        })
-
-        if (!findUser) {
-            const storeNewUser = await prisma.user.create({
-                data: {
-                    name: formData.get('nama') as string,
-                    email: formData.get('email') as string,
-                    telephone: formData.get('noTelp') as string
-                }
-            });
-            const storeResult = await prisma.result.create({
-                data: {
-                    score: formData.get('score') as string,
-                    level: formData.get('level') as string,
-                    User: {
-                        connect: {
-                            email: formData.get('email') as string,
-                        }
-                    }
-                }
-            });
-        } else {
-            const updateUser = await prisma.user.update({
-                where: {
-                    email: formData.get('email') as string,
-                },
-                data: {
-                    name: formData.get('nama') as string,
-                    email: formData.get('email') as string,
-                    telephone: formData.get('noTelp') as string
-                }
-            });
-            const storeResult = await prisma.result.create({
-                data: {
-                    score: formData.get('score') as string,
-                    level: formData.get('level') as string,
-                    User: {
-                        connect: {
-                            email: formData.get('email') as string,
-                        }
-                    }
-                }
-            });
-        }
-    } catch (error) {
-        return console.log(error);
-    }
-    
-    revalidatePath("/therapy")
-    redirect("/therapy")
-}
-
 export async function storeUser(
     nama: string,
     email: string,
@@ -145,5 +87,17 @@ export async function deleteUser( id: string ) {
         console.log("Database error: " + error);
         return { message: "Database error: Failed to delete user"}
     }
+}
 
+export async function storePost(formData: FormData) {
+    try {
+        // const post = await prisma.post.create({
+        //     data: {
+        //         title: formData.get('title'),
+        //         content: formData.get('content'),
+        //     }
+        // })
+    } catch (error) {
+        
+    }
 }
