@@ -14,7 +14,7 @@ function HomeContent() {
                             <div className='bg-hero-image w-full h-full bg-cover bg-center rounded-xl scale-125'></div>
                         </div>
                         <div className="lg:block lg:w-3/4 lg:mx-auto text-center">
-                            <Link href="/" className='bg-slate-100 px-5 py-2 lg:py-3 text-xl rounded-xl font-medium text-primary lg:block lg:w-3/5 lg:mx-auto text-center lg:text-2xl font-serif'>
+                            <Link href="/start" className='bg-slate-100 px-5 py-2 lg:py-3 text-xl rounded-xl font-medium text-primary lg:block lg:w-3/5 lg:mx-auto text-center lg:text-2xl font-serif'>
                                 GET STARTED
                             </Link>
                         </div>
@@ -22,7 +22,7 @@ function HomeContent() {
                 </div>
             </section>
 
-            <section className='container mt-10 px-4' id='Contact'>
+            <section className='container mt-10 px-4' id='About'>
                 <h1 className='text-center text-slate-200 text-xl mb-3 lg:text-2xl'>Tentang Kami</h1>
                 <p className='text-center text-slate-200 mb-3 text-sm lg:text-xl'>Kami merupakan Mahasiswa Universitas Mataram yang ingin berkontribusi membantu para korban bullying untuk dapat menenangkan pikiran mereka serta memberikan solusi terbaik untuk menghadapinya. Melalui kegiatan program keativitas mahasiswa (PKM) dengan ini kami menghadirkan e-CBT.</p>
                 <p className='text-center text-slate-200 mb-3 text-sm lg:text-xl'>Di e-CBT, Kami hadir untuk membangun ruang yang aman, positif, dan mendukung bagi siapa pun yang pernah merasakan bullying. Dengan menyediakan solusi-solusi dalam menghadapi bullying yang edukatif, dan media pelaporan bullying yang efektif kami berkomitmen untuk memberdayakan individu dalam melawan bullying dan menciptakan perubahan nyata.</p>

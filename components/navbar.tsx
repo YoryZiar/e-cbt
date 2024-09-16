@@ -11,15 +11,15 @@ export default function Navbar() {
     let linkNav = [
         {
             name: 'Beranda',
-            link: '#Home'
+            link: '/#Home'
         },
         {
             name: 'Tentang Kami',
-            link: '#About'
+            link: '/#About'
         },
         {
             name: 'Kontak',
-            link: '#Contact'
+            link: '/#Contact'
         }
     ]
 
@@ -63,7 +63,7 @@ export default function Navbar() {
                         ?
                         "absolute right-4 top-full w-full rounded-lg bg-primary max-w-[250px] py-5 shadow-lg shadow-slate-300 lg:static lg:block lg:max-w-full lg:rounded-none lg:bg-transparent lg:shadow-none transition ease-out duration-500 hidden"
                         :
-                        "absolute right-4 top-full w-full rounded-lg bg-primary max-w-[250px] py-5 shadow-lg shadow-slate-300 lg:static lg:block lg:max-w-full lg:rounded-none lg:bg-transparent lg:shadow-none"
+                        "absolute right-4 top-full w-full rounded-lg bg-primary max-w-[250px] py-5 shadow-lg shadow-slate-300 lg:static lg:block lg:max-w-full lg:rounded-none lg:bg-transparent lg:shadow-none z-50"
                 }>
                     <ul className="block lg:flex">
                         {
