@@ -9,13 +9,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // ...authConfig,
     providers: [
         Credentials({
-            // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-            // e.g. domain, username, password, 2FA token, etc.
-            credentials: {
-                email: {},
-                password: {},
-            },
-
             authorize: async (credentials) => {
                 let users = null;
                 const { email, password } = await signInSchema.parseAsync(credentials)

@@ -2,37 +2,60 @@
 
 import { useFormState } from "react-dom";
 import { authenticate } from "@/app/actions/auth/actions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+    const { data: session } = useSession();
+    const router = useRouter();
     const [errorMessage, formAction, isPending] = useFormState(
         authenticate,
         undefined,
     );
 
-    return (
-        <div className="mt-10">
-            <section className="bg-white max-w-xs lg:max-w-md md:max-w-md mx-auto rounded-xl py-5">
-                <h1 className="text-center font-normal text-3xl text-primary">Admin</h1>
+    if (session) return router.push("/dashboard")
 
-                <form action={formAction} className="mt-5">
-                    <label htmlFor="email" className="block mx-5 my-3">
-                        <span className="block font-normal text-sm mb-1 text-start">Email</span>
-                        <input type="text" id="email" name="email" className="py-3 w-full bg-slate-500 rounded-xl bg-opacity-20 focus:outline-none px-3 focus:ring-1 focus:ring-primary" placeholder="example@gmail.com" />
-                    </label>
-                    <label htmlFor="password" className="block mx-5">
-                        <span className="block font-normal text-sm mb-1 text-start">Password</span>
-                        <input type="password" id="password" name="password" className="py-3 w-full bg-slate-500 rounded-xl bg-opacity-20 focus:outline-none px-3 focus:ring-1 focus:ring-primary" placeholder="087123098234" />
-                    </label>
-                    <button type="submit" className="py-3 w-5/6 bg-red-700 block mx-auto mt-5 rounded-xl text-xl text-white">
-                        Login
-                    </button>
-                    {errorMessage && (
-                        <div>
-                            <p className="text-sm text-red-500 text-center">{errorMessage}</p>
+    return (
+        <div className="container mx-auto my-10 bg-primary rounded-lg py-3 lg:w-3/6">
+            <Tabs defaultValue="login" className="w-4/6 mx-auto">
+                <TabsList className="grid w-full grid-cols-2 bg-secondary">
+                    <TabsTrigger className="active:bg-primary" value="login">Login</TabsTrigger>
+                    <TabsTrigger value="register">Register</TabsTrigger>
+                </TabsList>
+                <TabsContent value="login">
+                    <form action={formAction}>
+                        <label htmlFor="email" className="block">
+                            <span className="block text-slate-200 py-2">Email</span>
+                            <Input name="email" id="email" type="email" className="p-3 bg-slate-200" />
+                        </label>
+                        <label htmlFor="password" className="block">
+                            <span className="block text-slate-200 py-2">Password</span>
+                            <Input name="password" id="password" type="password" className="p-3 bg-slate-200" />
+                        </label>
+                        <div className="block text-center">
+                            <Button className="bg-secondary hover:bg-violet-600 text-primary text-lg my-5">Login</Button>
                         </div>
-                    )}
-                </form>
-            </section>
+                    </form>
+                </TabsContent>
+                <TabsContent value="register">
+                    <form action="">
+                        <label htmlFor="email" className="block">
+                            <span className="block text-slate-200 py-2">Email</span>
+                            <Input name="email" id="email" type="email" className="p-3 bg-slate-200" />
+                        </label>
+                        <label htmlFor="password" className="block">
+                            <span className="block text-slate-200 py-2">Password</span>
+                            <Input name="password" id="password" type="password" className="p-3 bg-slate-200" />
+                        </label>
+                        <div className="block text-center">
+                            <Button className="bg-secondary hover:bg-violet-600 text-primary text-lg my-5">Register</Button>
+                        </div>
+                    </form>
+                </TabsContent>
+            </Tabs>
         </div>
     )
 }

@@ -36,8 +36,12 @@ function HomeContent() {
                     {/* <p className="text-slate-200 text-sm text-center lg:text-lg">Tuliskan apa yang kamu alami saat mengalami kekerasan (bullying)!</p> */}
 
                     <form action="" className="bg-primary max-w-xs md:max-w-3xl mx-auto rounded-lg py-5 mt-5 lg:p-10 lg:max-w-5xl">
+                        <label htmlFor="name" className="block mx-5">
+                            <span className="block font-normal text-start text-slate-200 mb-1">Nama</span>
+                            <input type="text" id="name" className="w-full rounded-md py-1 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary" />
+                        </label>
                         <label htmlFor="email" className="block mx-5">
-                            <span className="block font-normal text-start text-slate-200 mb-1">Email</span>
+                            <span className="block font-normal text-start text-slate-200 my-1">Email</span>
                             <input type="text" id="email" className="w-full rounded-md py-1 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary" />
                         </label>
                         <label htmlFor="pesan" className="block mx-5 my-5">

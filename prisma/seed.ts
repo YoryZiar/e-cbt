@@ -23,15 +23,6 @@ async function main() {
                 role: 0
             }
         });
-        
-        const addCategory = await prisma.category.createMany({
-            data: [
-                { name: "Bullying Fisik"},
-                { name: "Bullying Verbal"},
-                { name: "Bullying Relasional"},
-                { name: "Cyber Bullying"},
-            ]
-        })
 
     console.log("Seeding Finished");
     

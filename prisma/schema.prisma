@@ -21,42 +21,32 @@ model User {
   telephone String?
   password  String?
   role      Int       @default(1)
-  Result    Result[]
-  Post      Post[]
   createdAt DateTime  @default(now())
-  Message   Message[]
-}
-
-model Result {
-  id        String   @id @default(cuid())
-  userId    String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
-  score     String
-  level     String
-  createdAt DateTime @default(now())
-}
-
-model Post {
-  id         String    @id @default(cuid())
-  userId     String
-  User       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
-  title      String
-  content    String    @db.Text
-  createdAt  DateTime  @default(now())
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
-}
-
-model Category {
-  id   String @id @default(cuid())
-  name String
-  Post Post[]
+  Jurnal    Jurnal[]
 }
 
 model Message {
   id        String   @id @default(cuid())
-  userId    String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  title     String
+  email     String
   message   String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+model Jurnal {
+  id        String    @id @default(cuid())
+  userId    String
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String    @db.Text
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  Comment   Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  jurnalId  String
+  Jurnal    Jurnal   @relation(fields: [jurnalId], references: [id])
+  content   String   @db.Text
   createdAt DateTime @default(now())
 }
