@@ -8,7 +8,6 @@ import withReactContent from 'sweetalert2-react-content'
 import IdentityContent from "@/app/(home)/identity/page";
 import { useRouter } from 'next/navigation'
 import prisma from "@/lib/db";
-import { storeUser } from "@/app/actions/user/actions";
 
 function TesPageContent() {
     const [activeQuestion, setActiveQuestion] = useState(0);
@@ -112,46 +111,6 @@ function TesPageContent() {
                 return { nama, email, noTelp };
             }
         });
-
-        if (formValues) {
-            try {
-                const saveUser = await storeUser(
-                    formValues.nama,
-                    formValues.email,
-                    formValues.noTelp,
-                    score,
-                    level
-                )
-
-                if (saveUser) {
-                    const { isConfirmed } = await Swal.fire({
-                        title: 'Data Berhasil dikirim',
-                        // text: 'Do you want to continue',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    })
-                    if (isConfirmed) {
-                        router.push('/therapy')
-                    }
-                }
-            } catch (error) {
-                Swal.fire({
-                    title: 'Data Gagal dikirim',
-                    text: `${error}`,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                })
-            }
-            // const { isConfirmed } = await Swal.fire({
-            //     title: 'Data Berhasil dikirim',
-            //     text: 'Do you want to continue',
-            //     icon: 'success',
-            //     confirmButtonText: 'OK'
-            // })
-            // if (isConfirmed) {
-            //     router.push('/therapy')
-            // }
-        }
     }
 
     return (
