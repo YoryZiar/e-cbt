@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation"
+import { redirect  } from "next/navigation"
 import TabelMateri from "@/components/users/tabelMateri"
 import { auth } from "@/auth"
 import {
@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/card"
 
 export default async function Page() {
+    const session = await auth();
+
+    if (!session) return redirect("/")
 
     return (
         <div className="container mx-auto">
