@@ -23,6 +23,7 @@ model User {
   role      Int       @default(1)
   createdAt DateTime  @default(now())
   Jurnal    Jurnal[]
+  Comment   Comment[]
 }
 
 model Message {
@@ -47,6 +48,8 @@ model Comment {
   id        String   @id @default(cuid())
   jurnalId  String
   Jurnal    Jurnal   @relation(fields: [jurnalId], references: [id])
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
   content   String   @db.Text
   createdAt DateTime @default(now())
 }
