@@ -10,18 +10,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
-    Activity,
-    ArrowUpRight,
-    CircleUser,
-    CreditCard,
-    DollarSign,
     Menu,
     Package2,
-    Search,
-    Users,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -29,8 +21,29 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
+import { useState } from "react"
 
 export default function AdminNavbar() {
+
+    const adminNav = [
+        {
+            href: "/dashboard",
+            name: "Dashboard"
+        },
+        {
+            href: "/jurnal",
+            name: "Jurnal"
+        },
+        {
+            href: "/messages",
+            name: "Pesan"
+        },
+        {
+            href: "/users",
+            name: "Pengguna"
+        }
+    ]
+
     return (
         <div className="flex w-full flex-col">
             <header className="sticky top-0 flex h-16 items-center gap-4 bg-secondary px-4 md:px-6">
@@ -42,39 +55,26 @@ export default function AdminNavbar() {
                         <Package2 className="h-6 w-6" />
                         <span className="sr-only">Acme Inc</span>
                     </Link>
-                    <Link
-                        href="/dashboard"
-                        className="text-foreground transition-colors hover:text-foreground"
-                    >
-                        Dashboard
-                    </Link>
-                    <Link
-                        href="/jurnal"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Jurnal
-                    </Link>
-                    <Link
-                        href="pesan"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Pesan
-                    </Link>
-                    <Link
-                        href="pengguna"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Pengguna
-                    </Link>
+                    {adminNav.map((nav) => {
+                        return (
+                            <Link
+                                href={nav.href}
+                                className="text-foreground transition-colors hover:text-foreground"
+                                key={nav.name}
+                            >
+                                {nav.name}
+                            </Link>
+                        )
+                    })}
                 </nav>
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button
                             variant="outline"
                             size="icon"
-                            className="shrink-0 md:hidden"
+                            className="shrink-0 md:hidden bg-primary"
                         >
-                            <Menu className="h-5 w-5" />
+                            <Menu className="h-5 w-5 text-slate-200" />
                             <span className="sr-only">Toggle navigation menu</span>
                         </Button>
                     </SheetTrigger>
@@ -87,27 +87,13 @@ export default function AdminNavbar() {
                                 <Package2 className="h-6 w-6" />
                                 <span className="sr-only">Acme Inc</span>
                             </Link>
-                            <Link href="/dashboard" className="hover:text-foreground">
-                                Dashboard
-                            </Link>
-                            <Link
-                                href="jurnal"
-                                className="text-muted-foreground hover:text-foreground"
-                            >
-                                Jurnal
-                            </Link>
-                            <Link
-                                href="/pesan"
-                                className="text-muted-foreground hover:text-foreground"
-                            >
-                                Pesan
-                            </Link>
-                            <Link
-                                href="pengguna"
-                                className="text-muted-foreground hover:text-foreground"
-                            >
-                                Pengguna
-                            </Link>
+                            {adminNav.map((nav) => {
+                                return (
+                                    <Link href={nav.href} className="hover:text-foreground" key={nav.name}>
+                                        {nav.name}
+                                    </Link>
+                                )
+                            })}
                         </nav>
                     </SheetContent>
                 </Sheet>

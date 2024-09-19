@@ -6,7 +6,7 @@ import { authConfig } from "./auth.config"
 import checkPassword from "./lib/password"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-    // ...authConfig,
+    ...authConfig,
     providers: [
         Credentials({
             authorize: async (credentials) => {

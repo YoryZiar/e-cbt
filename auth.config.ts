@@ -14,10 +14,6 @@ export const authConfig = {
 
         //     return !!auth;
         // },
-        authorized: async ({ auth }) => {
-            // Logged in users are authenticated, otherwise redirect to login page
-            return !!auth
-        },
     },
     providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;

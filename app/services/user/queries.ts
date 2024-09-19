@@ -1,9 +1,14 @@
 import prisma from "@/lib/db";
 
 // get user
-export async function getUser() {
+export async function getUser(
+    page: number,
+    data: number
+) {
     try {
         const users = await prisma.user.findMany({
+            skip: page,
+            take: data,
             where: {
                 role: 1
             }
@@ -78,6 +83,24 @@ export async function countJurnal() {
     } catch (error) {
         console.log("Database error: " + error);
         throw new Error("Failed to count jurnal")
+    }
+}
+
+// get message
+export async function getMessage(
+    page: number,
+    data: number
+) {
+    try {
+        const listMessage = await prisma.message.findMany({
+            skip: page,
+            take: data
+        })
+
+        return listMessage
+    } catch (error) {
+        console.log("Database error: " + error);
+        throw new Error("Failed to get message")
     }
 }
 

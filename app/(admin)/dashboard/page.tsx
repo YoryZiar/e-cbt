@@ -32,8 +32,11 @@ import {
     countUser,
     getJurnal,
     countJurnal,
+    getMessage,
     countMessage
 } from "@/app/services/user/queries"
+import JurnalTableItem from "../jurnal/jurnal-table-item"
+import MessagesItem from "../messages/messages-table-item"
 
 export default async function Dashboard() {
     // session
@@ -44,6 +47,7 @@ export default async function Dashboard() {
     const totalUser = await countUser();
     const listJurnal = await getJurnal(0, 5);
     const totalJurnal = await countJurnal();
+    const listMessage = await getMessage(0, 5)
     const totalMessage = await countMessage();
 
     return (
@@ -135,25 +139,11 @@ export default async function Dashboard() {
                                 <TableBody>
                                     {listJurnal.map((jurnal, index) => {
                                         return (
-                                            <TableRow key={jurnal.id}>
-                                                <TableCell>
-                                                    <div className="font-medium text-slate-900 text-center">{index + 1}</div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="font-medium text-slate-900 text-center">{jurnal.title}</div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="font-medium text-slate-900 text-center">{jurnal.User.email}</div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="font-medium text-slate-900 text-center">{jurnal.createdAt.toLocaleDateString()}</div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="font-medium text-center">
-                                                        <Button className="text-slate-200 hover:bg-purple-800">Detail</Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
+                                            <JurnalTableItem
+                                                key={jurnal.id}
+                                                jurnal={jurnal}
+                                                index={index}
+                                            />
                                         )
                                     })}
                                 </TableBody>
@@ -161,40 +151,25 @@ export default async function Dashboard() {
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-5" className="bg-secondary border-0 shadow-lg shadow-primary">
-                        <CardHeader>
+                        <CardHeader className="flex flex-row items-center">
                             <CardTitle>Pesan Terbaru</CardTitle>
+                            <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
+                                <Link href="/messages">
+                                    Liha Semua
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Link>
+                            </Button>
                         </CardHeader>
                         <CardContent className="grid gap-8">
-                            <div className="flex items-center gap-4">
-                                <Avatar className="hidden h-9 w-9 sm:flex">
-                                    <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                                    <AvatarFallback>OM</AvatarFallback>
-                                </Avatar>
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Olivia Martin
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        olivia.martin@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">+$1,999.00</div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <Avatar className="hidden h-9 w-9 sm:flex">
-                                    <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                                    <AvatarFallback>JL</AvatarFallback>
-                                </Avatar>
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Jackson Lee
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        jackson.lee@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">+$39.00</div>
-                            </div>
+                            {listMessage.map((message, index) => {
+                                return (
+                                    <MessagesItem
+                                        key={message.id}
+                                        message={message}
+                                        index={index + 1}
+                                    />
+                                )
+                            })}
                         </CardContent>
                     </Card>
                 </div>

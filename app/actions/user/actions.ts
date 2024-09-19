@@ -6,6 +6,24 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 
+// register
+export async function register(formData: FormData) {
+    try {
+        const userRegister = await prisma.user.create({
+            data: {
+                name: formData.get('name') as string,
+                email: formData.get('email') as string,
+                password: formData.get('password') as string
+            }
+        })
+    } catch (error) {
+        console.log("Error registering user: " + error);
+        throw new Error("Error register")
+    }
+
+    revalidatePath("/login")
+}
+
 const FormMessageSchema = z.object({
     title: z.string(),
     email: z.string(),
