@@ -1,13 +1,6 @@
 import Link from "next/link"
 import {
-    Activity,
     ArrowUpRight,
-    CircleUser,
-    CreditCard,
-    DollarSign,
-    Menu,
-    Package2,
-    Search,
     Users,
 } from "lucide-react"
 
@@ -35,7 +28,12 @@ import {
 } from "@/components/ui/table"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { getJurnal } from "@/app/services/user/queries"
+import {
+    countUser,
+    getJurnal,
+    countJurnal,
+    countMessage
+} from "@/app/services/user/queries"
 
 export default async function Dashboard() {
     // session
@@ -43,7 +41,10 @@ export default async function Dashboard() {
     if (!session) return redirect("/")
 
     // data
-    const jurnal = await getJurnal();
+    const totalUser = await countUser();
+    const listJurnal = await getJurnal(0, 5);
+    const totalJurnal = await countJurnal();
+    const totalMessage = await countMessage();
 
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -51,13 +52,13 @@ export default async function Dashboard() {
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
                     <Card x-chunk="dashboard-01-chunk-0" className="bg-secondary border-0 shadow-lg shadow-primary">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
+                            <CardTitle className="text-sm font-medium text-slate-900">
                                 Total Jurnal
                             </CardTitle>
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">45,231</div>
+                            <div className="text-2xl font-bold">{totalJurnal}</div>
                             {/* <p className="text-xs text-muted-foreground">
                                 +20.1% from last month
                             </p> */}
@@ -65,13 +66,13 @@ export default async function Dashboard() {
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-1" className="bg-secondary border-0 shadow-lg shadow-primary">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
+                            <CardTitle className="text-sm font-medium text-slate-900">
                                 Total Pesan
                             </CardTitle>
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">2350</div>
+                            <div className="text-2xl font-bold">{totalMessage}</div>
                             {/* <p className="text-xs text-muted-foreground">
                                 +180.1% from last month
                             </p> */}
@@ -79,11 +80,11 @@ export default async function Dashboard() {
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-2" className="bg-secondary border-0 shadow-lg shadow-primary">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Pengguna</CardTitle>
+                            <CardTitle className="text-sm font-medium text-slate-900">Pengguna</CardTitle>
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">12,234</div>
+                            <div className="text-2xl font-bold">{totalUser}</div>
                             {/* <p className="text-xs text-muted-foreground">
                                 +19% from last month
                             </p> */}
@@ -107,9 +108,9 @@ export default async function Dashboard() {
                         className="xl:col-span-2 bg-secondary border-0 shadow-lg shadow-primary" x-chunk="dashboard-01-chunk-4"
                     >
                         <CardHeader className="flex flex-row items-center">
-                            <div className="grid gap-2">
+                            <div className="grid gap-2 text-slate-900">
                                 <CardTitle>Jurnal</CardTitle>
-                                <CardDescription>
+                                <CardDescription className="text-slate-600">
                                     Daftar Jurnal Terbaru.
                                 </CardDescription>
                             </div>
@@ -123,28 +124,38 @@ export default async function Dashboard() {
                         <CardContent>
                             <Table>
                                 <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Judul</TableHead>
-                                        <TableHead>Email</TableHead>
-                                        <TableHead>Tanggal</TableHead>
-                                        <TableHead>Aksi</TableHead>
+                                    <TableRow className="border-primary">
+                                        <TableHead className="text-slate-600 text-center">No</TableHead>
+                                        <TableHead className="text-slate-600 text-center">Judul</TableHead>
+                                        <TableHead className="text-slate-600 text-center">Email</TableHead>
+                                        <TableHead className="text-slate-600 text-center">Tanggal</TableHead>
+                                        <TableHead className="text-slate-600 text-center">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell>
-                                            <div className="font-medium">Judul jurnal</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium">Email user</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium">9/19/2024</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium">9/19/2024</div>
-                                        </TableCell>
-                                    </TableRow>
+                                    {listJurnal.map((jurnal, index) => {
+                                        return (
+                                            <TableRow key={jurnal.id}>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{index + 1}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{jurnal.title}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{jurnal.User.email}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{jurnal.createdAt.toLocaleDateString()}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-center">
+                                                        <Button className="text-slate-200 hover:bg-purple-800">Detail</Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             </Table>
                         </CardContent>
