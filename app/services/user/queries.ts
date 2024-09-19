@@ -29,3 +29,14 @@ export async function getUserById( id: string ) {
         throw new Error("Failed to get user by id");
     }
 }
+
+export async function getJurnal() {
+    try {
+        const listJurnal = await prisma.jurnal.findMany()
+
+        return listJurnal
+    } catch (error) {
+        console.log("Database error: " + error);
+        throw new Error("Failed to get jurnal")
+    }
+}

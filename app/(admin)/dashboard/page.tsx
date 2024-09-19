@@ -35,14 +35,16 @@ import {
 } from "@/components/ui/table"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-
-export const description =
-    "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."
+import { getJurnal } from "@/app/services/user/queries"
 
 export default async function Dashboard() {
+    // session
     const session = await auth();
-
     if (!session) return redirect("/")
+
+    // data
+    const jurnal = await getJurnal();
+
     return (
         <div className="flex min-h-screen w-full flex-col">
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -122,59 +124,26 @@ export default async function Dashboard() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Customer</TableHead>
-                                        <TableHead>
-                                            Type
-                                        </TableHead>
-                                        <TableHead>
-                                            Status
-                                        </TableHead>
-                                        <TableHead>
-                                            Date
-                                        </TableHead>
-                                        <TableHead className="text-right">Amount</TableHead>
+                                        <TableHead>Judul</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Tanggal</TableHead>
+                                        <TableHead>Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     <TableRow>
                                         <TableCell>
-                                            <div className="font-medium">Liam Johnson</div>
-                                            <div className="hidden text-sm text-muted-foreground md:inline">
-                                                liam@example.com
-                                            </div>
+                                            <div className="font-medium">Judul jurnal</div>
                                         </TableCell>
                                         <TableCell>
-                                            Sale
+                                            <div className="font-medium">Email user</div>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge className="text-xs" variant="outline">
-                                                Approved
-                                            </Badge>
+                                            <div className="font-medium">9/19/2024</div>
                                         </TableCell>
                                         <TableCell>
-                                            2023-06-23
+                                            <div className="font-medium">9/19/2024</div>
                                         </TableCell>
-                                        <TableCell className="text-right">$250.00</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>
-                                            <div className="font-medium">Olivia Smith</div>
-                                            <div className="hidden text-sm text-muted-foreground md:inline">
-                                                olivia@example.com
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            Refund
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge className="text-xs" variant="outline">
-                                                Declined
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            2023-06-24
-                                        </TableCell>
-                                        <TableCell className="text-right">$150.00</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
