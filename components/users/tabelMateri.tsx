@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Table,
     TableBody,
@@ -8,9 +10,18 @@ import {
 } from "@/components/ui/table"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import Swal from "sweetalert2"
 
 
 export default function TabelMateri() {
+    async function deleteData() {
+        const { isConfirmed } = await Swal.fire({
+            title: "Delete",
+            confirmButtonText: "Are you sure?",
+            showConfirmButton: true
+        })
+    }
+
     return (
         <div className="container mx-auto">
             <Button className="bg-secondary my-3">
@@ -33,7 +44,7 @@ export default function TabelMateri() {
                                 <Button className="bg-secondary mr-3">
                                     Detail
                                 </Button>
-                                <Button className="bg-red-500">
+                                <Button className="bg-red-500" onClick={deleteData}>
                                     Delete
                                 </Button>
                             </div>

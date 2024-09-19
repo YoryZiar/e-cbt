@@ -6,9 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div>
             <AdminNavbar />
             
-            <div className="mt-10">
-                {children}
-            </div>
+            {children}
         </div>
     );
 }
