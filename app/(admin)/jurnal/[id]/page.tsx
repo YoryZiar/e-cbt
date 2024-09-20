@@ -22,10 +22,7 @@ import { auth } from "@/auth";
 export default async function DetailJurnal({ params }: { params: { id: string } }) {
     const id = params.id;
     const jurnal = await getJurnalById(`${id}`);
-    const comment = await getCommentByJurnal(`${id}`)
-    const session = await auth();
-    console.log(id);
-    
+    const comment = await getCommentByJurnal(`${id}`)    
 
     return (
         <div className="container bg-primary my-5 w-80 mx-auto rounded-lg p-2">
