@@ -142,7 +142,7 @@ export default async function Dashboard() {
                                             <JurnalTableItem
                                                 key={jurnal.id}
                                                 jurnal={jurnal}
-                                                index={index}
+                                                index={index + 1}
                                             />
                                         )
                                     })}

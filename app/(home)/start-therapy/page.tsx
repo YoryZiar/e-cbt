@@ -1,8 +1,13 @@
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { createJurnal } from "@/app/actions/user/actions"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
-export default function StartTherapy() {
+export default async function StartTherapy() {
+    const session = await auth();
+
+    if (!session) return redirect("/login")
     return (
         <div className="container my-10 bg-primary rounded-lg mx-auto py-3 lg:w-1/2">
             <form action={createJurnal} method="post" className="mx-auto">

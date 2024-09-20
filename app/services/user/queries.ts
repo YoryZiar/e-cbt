@@ -86,6 +86,22 @@ export async function countJurnal() {
     }
 }
 
+// get jurnal by id
+export async function getJurnalById(id: string) {
+    try {
+        const jurnalById = await prisma.jurnal.findUnique({
+            where: {
+                id: id
+            }
+        })
+
+        return jurnalById
+    } catch (error) {
+        console.log("Database error: " + error);
+        throw new Error("Failed to get jurnal")
+    }
+}
+
 // get message
 export async function getMessage(
     page: number,
@@ -113,5 +129,24 @@ export async function countMessage() {
     } catch (error) {
         console.log("Database error: " + error);
         throw new Error("Failed to count message")
+    }
+}
+
+// get comment
+export async function getCommentByJurnal(id: string) {
+    try {
+        const commentByJurnal = await prisma.comment.findMany({
+            where: {
+                jurnalId: id
+            },
+            include: {
+                User: true
+            }
+        })
+
+        return commentByJurnal
+    } catch (error) {
+        console.log("Database error: " + error);
+        throw new Error("Failed to get comment")
     }
 }

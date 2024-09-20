@@ -79,3 +79,35 @@ export async function createJurnal(
     revalidatePath("/start-therapy")
     redirect("/start-therapy")
 }
+
+// create comment
+export async function createComment(formData: FormData) {
+    try {
+        const session = await auth()
+        const createComment = await prisma.comment.create({
+            data: {
+                Jurnal: {
+                    connect: {
+                        id: formData.get("jurnalId") as string,
+                    }
+                },
+                User: {
+                    connect: {
+                        email: session?.user?.email as string,
+                    }
+                },
+                content: formData.get("message") as string,
+            },
+            include: {
+                User: true,
+                Jurnal: true
+            }
+        })
+    } catch (error) {
+        console.log("Error create Comment: " + error);
+        throw new Error("Failed to create Comment")
+    }
+
+    revalidatePath(`/jurnal/${formData.get("jurnalId")}`)
+    redirect(`/jurnal/${formData.get("jurnalId")}`)
+}
