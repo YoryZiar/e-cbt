@@ -1,27 +1,19 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import {
-    ArrowUpRight,
-} from "lucide-react"
-import {
-    getJurnal
-} from "@/app/services/user/queries"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
 import { getMessage } from "@/app/services/user/queries"
 import MessagesItem from "./messages-table-item"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
 export default async function Messages() {
+    // session
+    const session = await auth();
+    if (!session) return redirect("/")
+
     const listMessages = await getMessage(0, 10);
 
     return (

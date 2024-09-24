@@ -10,7 +10,7 @@ export async function authenticate(
 ) {
     try {
         const result = await signIn('credentials', formData);
-        if (result) return redirect("/dashboard");
+        return result
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

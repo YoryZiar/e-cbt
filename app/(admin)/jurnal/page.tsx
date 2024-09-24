@@ -5,12 +5,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import {
-    ArrowUpRight,
-    Users,
-} from "lucide-react"
 import {
     Table,
     TableBody,
@@ -23,8 +17,14 @@ import {
     getJurnal
 } from "@/app/services/user/queries"
 import JurnalTableItem from "./jurnal-table-item"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
 export default async function Jurnal() {
+    // session
+    const session = await auth();
+    if (!session) return redirect("/")
+
     const listJurnal = await getJurnal(0, 10);
 
     return (

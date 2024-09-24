@@ -6,10 +6,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import {
-    ArrowUpRight,
-} from "lucide-react"
 import {
     Table,
     TableBody,
@@ -21,8 +17,14 @@ import {
 import {
     getUser
 } from "@/app/services/user/queries"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
 export default async function Users() {
+    // session
+    const session = await auth();
+    if (!session) return redirect("/")
+
     const listUser = await getUser(0, 10);
 
     return (
