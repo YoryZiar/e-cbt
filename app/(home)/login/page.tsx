@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Login() {
     const { data: session } = useSession();
@@ -17,11 +18,20 @@ export default function Login() {
         undefined,
     );
 
+    if (errorMessage) {
+        Swal.fire({
+            title: "Gagal Login",
+            icon: "error",
+            text: `${errorMessage}`,
+            showConfirmButton: true
+        })
+    }
+
     if (session) return router.push("/dashboard")
 
     return (
         <div className="container mx-auto my-10 bg-primary rounded-lg py-3 lg:w-3/6">
-            <Tabs defaultValue="login" className="w-4/6 mx-auto">
+            <Tabs defaultValue="register" className="w-4/6 mx-auto">
                 <TabsList className="grid w-full grid-cols-2 bg-secondary">
                     <TabsTrigger className="active:bg-primary" value="login">Login</TabsTrigger>
                     <TabsTrigger value="register">Register</TabsTrigger>
