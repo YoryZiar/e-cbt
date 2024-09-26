@@ -124,7 +124,7 @@ export default function AdminNavbar() {
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator /> */}
                             <DropdownMenuItem>
-                                <button onClick={() => signOut({ redirectTo: "/auth/login"})}>Logout</button>
+                                <button onClick={() => signOut()}>Logout</button>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
