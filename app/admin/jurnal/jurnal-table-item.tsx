@@ -56,7 +56,7 @@ export default function JurnalTableItem({
             </TableCell>
             <TableCell>
                 <div className="font-medium text-center">
-                    <Link href={`/jurnal/${jurnal.id}`}>
+                    <Link href={`/admin/jurnal/${jurnal.id}`}>
                         <Button className="text-slate-200 hover:bg-purple-800">Detail</Button>
                     </Link>
                 </div>

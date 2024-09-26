@@ -14,7 +14,6 @@ import {
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
@@ -34,6 +33,7 @@ import MessagesItem from "../messages/messages-table-item"
 export default async function Dashboard() {
     // session
     const session = await auth();
+        
     if (!session) return redirect("/")
 
     // data

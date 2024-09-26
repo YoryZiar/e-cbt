@@ -27,19 +27,19 @@ export default function AdminNavbar() {
 
     const adminNav = [
         {
-            href: "/dashboard",
+            href: "/admin/dashboard",
             name: "Dashboard"
         },
         {
-            href: "/jurnal",
+            href: "/admin/jurnal",
             name: "Jurnal"
         },
         {
-            href: "/messages",
+            href: "/admin/messages",
             name: "Pesan"
         },
         {
-            href: "/users",
+            href: "/admin/users",
             name: "Pengguna"
         }
     ]
