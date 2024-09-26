@@ -51,31 +51,43 @@ export default async function Users() {
                                 <TableHead className="text-slate-600 text-center">Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
-                            {listUser.map((user, index) => {
-                                return (
-                                    <TableRow key={user.id}>
-                                        <TableCell>
-                                            <div className="font-medium text-slate-900 text-center">{index + 1}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium text-slate-900 text-center">{user.name}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium text-slate-900 text-center">{user.email}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium text-slate-900 text-center">{user.createdAt.toLocaleDateString()}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium text-center">
-                                                <Button className="text-slate-200 hover:bg-purple-800">Detail</Button>
-                                            </div>
+                        {
+                            listUser.length
+                                ?
+                                <TableBody>
+                                    {listUser.map((user, index) => {
+                                        return (
+                                            <TableRow key={user.id}>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{index + 1}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{user.name}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{user.email}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-slate-900 text-center">{user.createdAt.toLocaleDateString()}</div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium text-center">
+                                                        <Button className="text-slate-200 hover:bg-purple-800">Detail</Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
+                                </TableBody>
+                                :
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell colSpan={5}>
+                                            <h1 className="text-center text-lg">Pengguna tidak ada!</h1>
                                         </TableCell>
                                     </TableRow>
-                                )
-                            })}
-                        </TableBody>
+                                </TableBody>
+                        }
                     </Table>
                 </CardContent>
             </Card>

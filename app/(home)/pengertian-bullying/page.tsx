@@ -2,6 +2,8 @@ import {
     Card,
     CardContent
 } from "@/components/ui/card"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function PengertianBullying() {
     return (
@@ -22,6 +24,11 @@ export default function PengertianBullying() {
                         </p>
                     </CardContent>
                 </Card>
+            </div>
+            <div className="text-center my-5">
+                <Link href="/bullying" >
+                    <Button className="bg-secondary hover:bg-violet-600 hover:text-slate-200 text-2xl">Back</Button>
+                </Link>
             </div>
         </div>
     )

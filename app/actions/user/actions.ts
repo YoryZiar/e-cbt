@@ -4,7 +4,6 @@ import { auth } from "@/auth"
 import prisma from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { z } from "zod"
 
 // register
 export async function register(formData: FormData) {
@@ -24,12 +23,6 @@ export async function register(formData: FormData) {
     revalidatePath("/login")
 }
 
-const FormMessageSchema = z.object({
-    title: z.string(),
-    email: z.string(),
-    message: z.string(),
-});
-
 // send message from contact form
 export async function sendMessage(
     formData: FormData
@@ -47,8 +40,7 @@ export async function sendMessage(
         throw new Error("Failed to create message")
     }
 
-    revalidatePath("/")
-    redirect("/#contact")
+    redirect("/#Home")
 }
 
 // create jurnal
@@ -125,5 +117,21 @@ export async function destroyJurnal(jurnalId: string) {
     } catch (error) {
         console.log("database error: " + error);
         throw new Error("Failed to delete jurnal")
+    }
+}
+
+// delete message
+export async function destroyMessage(messageId: string) {
+    try {
+        const messageById = await prisma.message.delete({
+            where: {
+                id: messageId
+            }
+        });
+
+        return messageById;
+    } catch (error) {
+        console.log("database error: " + error);
+        throw new Error("Failed to delete message")
     }
 }

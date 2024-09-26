@@ -17,6 +17,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
+    TableCell
 } from "@/components/ui/table"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
@@ -33,14 +34,14 @@ import MessagesItem from "../messages/messages-table-item"
 export default async function Dashboard() {
     // session
     const session = await auth();
-        
+
     if (!session) return redirect("/")
 
     // data
     const totalUser = await countUser();
     const listJurnal = await getJurnal(0, 5);
     const totalJurnal = await countJurnal();
-    const listMessage = await getMessage(0, 5)
+    const listMessages = await getMessage(0, 5)
     const totalMessage = await countMessage();
 
     return (
@@ -129,17 +130,29 @@ export default async function Dashboard() {
                                         <TableHead className="text-slate-600 text-center">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
-                                    {listJurnal.map((jurnal, index) => {
-                                        return (
-                                            <JurnalTableItem
-                                                key={jurnal.id}
-                                                jurnal={jurnal}
-                                                index={index + 1}
-                                            />
-                                        )
-                                    })}
-                                </TableBody>
+                                {
+                                    listJurnal.length
+                                        ?
+                                        <TableBody>
+                                            {listJurnal.map((jurnal, index) => {
+                                                return (
+                                                    <JurnalTableItem
+                                                        key={jurnal.id}
+                                                        jurnal={jurnal}
+                                                        index={index + 1}
+                                                    />
+                                                )
+                                            })}
+                                        </TableBody>
+                                        :
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell colSpan={5}>
+                                                    <h1 className="text-center text-lg">Jurnal Kosong!</h1>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                }
                             </Table>
                         </CardContent>
                     </Card>
@@ -153,17 +166,25 @@ export default async function Dashboard() {
                                 </Link>
                             </Button>
                         </CardHeader>
-                        <CardContent className="grid gap-8">
-                            {listMessage.map((message, index) => {
-                                return (
-                                    <MessagesItem
-                                        key={message.id}
-                                        message={message}
-                                        index={index + 1}
-                                    />
-                                )
-                            })}
-                        </CardContent>
+                        {
+                            listMessages.length
+                                ?
+                                <CardContent className="grid gap-8">
+                                    {listMessages.map((message, index) => {
+                                        return (
+                                            <MessagesItem
+                                                key={message.id}
+                                                message={message}
+                                                index={index + 1}
+                                            />
+                                        )
+                                    })}
+                                </CardContent>
+                                :
+                                <CardContent className="grid gap-8">
+                                    <h1 className="text-center">Pesan Kosong!</h1>
+                                </CardContent>
+                        }
                     </Card>
                 </div>
             </main>

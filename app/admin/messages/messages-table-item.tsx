@@ -7,6 +7,7 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import Swal from "sweetalert2"
+import { destroyMessage } from "@/app/actions/user/actions"
 
 interface Message {
     id: string,
@@ -25,14 +26,52 @@ export default function MessagesItem({
     message,
     index
 }: MessageTableItemProps) {
+    const messageId = message.id;
 
     const handleDetail = async () => {
-        Swal.fire({
+        await Swal.fire({
             title: `${message.title}`,
             text: `${message.message}`,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',
         })
+    }
+
+    const deleteMessage = async () => {
+        const { isConfirmed } = await Swal.fire({
+            title: "Pesan akan di hapus?",
+            confirmButtonText: "Hapus",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#b91c1c"
+        })
+
+        if (isConfirmed) {
+            try {
+                const delMessage = await destroyMessage(messageId);
+
+                if (delMessage) {
+                    const { isConfirmed } = await Swal.fire({
+                        title: "Pesan berhasil di hapus",
+                        icon: "success",
+                        showConfirmButton: true,
+                        showCancelButton: true,
+                        cancelButtonColor: "#b91c1c"
+                    })
+
+                    if (isConfirmed) {
+                        location.reload();
+                    }
+                }
+            } catch (error) {
+                await Swal.fire({
+                    title: "Pesan gagal di hapus",
+                    icon: "error",
+                    text: `${error}`,
+                    confirmButtonText: "Ok"
+                })
+            }
+        }
     }
 
     return (
@@ -50,7 +89,8 @@ export default function MessagesItem({
                 </p>
             </div>
             <div className="ml-auto font-medium">
-                <Button onClick={handleDetail} className="text-slate-200 hover:bg-purple-800">Detail</Button>
+                <Button onClick={handleDetail} className="text-slate-200 hover:bg-purple-800 mr-2">Detail</Button>
+                <Button onClick={deleteMessage} className="text-slate-200 bg-red-700 hover:bg-red-800">Hapus</Button>
             </div>
         </div>
     )

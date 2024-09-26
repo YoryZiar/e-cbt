@@ -22,7 +22,10 @@ export default async function Messages() {
                 <CardHeader className="flex flex-row items-center">
                     <CardTitle>Pesan Terbaru</CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-8">
+                {
+                    listMessages.length
+                    ?
+                    <CardContent className="grid gap-8">
                     {listMessages.map((message, index) => {
                         return (
                             <MessagesItem
@@ -33,6 +36,11 @@ export default async function Messages() {
                         )
                     })}
                 </CardContent>
+                :
+                <CardContent className="grid gap-8">
+                    <h1 className="text-center">Pesan Kosong!</h1>
+                </CardContent>
+                }
             </Card>
         </div>
     )

@@ -51,17 +51,29 @@ export default async function Jurnal() {
                                 <TableHead className="text-slate-600 text-center">Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
-                            {listJurnal.map((jurnal, index) => {
-                                return (
-                                    <JurnalTableItem
-                                    key={jurnal.id}
-                                    jurnal={jurnal}
-                                    index={index + 1}
-                                    />
-                                )
-                            })}
-                        </TableBody>
+                        {
+                            listJurnal.length
+                                ?
+                                <TableBody>
+                                    {listJurnal.map((jurnal, index) => {
+                                        return (
+                                            <JurnalTableItem
+                                                key={jurnal.id}
+                                                jurnal={jurnal}
+                                                index={index + 1}
+                                            />
+                                        )
+                                    })}
+                                </TableBody>
+                                :
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell colSpan={5}>
+                                            <h1 className="text-center text-lg">Jurnal Kosong!</h1>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                        }
                     </Table>
                 </CardContent>
             </Card>

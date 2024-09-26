@@ -38,7 +38,7 @@ function HomeContent() {
 
                     <form action={sendMessage} className="bg-primary max-w-xs md:max-w-3xl mx-auto rounded-lg py-5 mt-5 lg:p-10 lg:max-w-5xl">
                         <label htmlFor="title" className="block mx-5">
-                            <span className="block font-normal text-start text-slate-200 mb-1">Judul</span>
+                            <span className="block font-normal text-start text-slate-200 mb-1">Nama</span>
                             <input type="text" name="title" id="title" className="w-full rounded-md py-1 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary" />
                         </label>
                         <label htmlFor="email" className="block mx-5">
