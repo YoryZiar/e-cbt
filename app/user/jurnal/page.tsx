@@ -8,11 +8,12 @@ import {
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import {
     getJurnal
 } from "@/app/services/user/queries"
@@ -39,6 +40,11 @@ export default async function Jurnal() {
                             Daftar Jurnal Terbaru.
                         </CardDescription>
                     </div>
+                    <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
+                        <Link href="/user/jurnal">
+                            Buat Jurnal
+                        </Link>
+                    </Button>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -55,9 +61,9 @@ export default async function Jurnal() {
                             {listJurnal.map((jurnal, index) => {
                                 return (
                                     <JurnalTableItem
-                                    key={jurnal.id}
-                                    jurnal={jurnal}
-                                    index={index + 1}
+                                        key={jurnal.id}
+                                        jurnal={jurnal}
+                                        index={index + 1}
                                     />
                                 )
                             })}

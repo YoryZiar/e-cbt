@@ -112,7 +112,7 @@ export default async function Dashboard() {
                                 </CardDescription>
                             </div>
                             <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
-                                <Link href="/jurnal">
+                                <Link href="/admin/jurnal">
                                     Liha Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>
@@ -147,7 +147,7 @@ export default async function Dashboard() {
                         <CardHeader className="flex flex-row items-center">
                             <CardTitle>Pesan Terbaru</CardTitle>
                             <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
-                                <Link href="/messages">
+                                <Link href="/admin/messages">
                                     Liha Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>

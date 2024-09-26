@@ -76,8 +76,7 @@ export async function createJurnal(
         throw new Error("Failed to create Therapy")
     }
 
-    revalidatePath("/start-therapy")
-    redirect("/start-therapy")
+    redirect("/")
 }
 
 // create comment
@@ -110,4 +109,21 @@ export async function createComment(formData: FormData) {
 
     revalidatePath(`/jurnal/${formData.get("jurnalId")}`)
     redirect(`/jurnal/${formData.get("jurnalId")}`)
+}
+
+// delete jurnal
+export async function destroyJurnal(jurnalId: string) {
+    try {
+        const jurnalById = await prisma.jurnal.delete({
+            where: {
+                id: jurnalId.toString()
+            }
+        });
+        
+        revalidatePath("/user/jurnal")
+        return jurnalById
+    } catch (error) {
+        console.log("database error: " + error);
+        throw new Error("Failed to delete jurnal")
+    }
 }

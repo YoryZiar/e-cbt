@@ -6,13 +6,9 @@ import { register } from "@/app/actions/user/actions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 export default function Login() {
-    const { data: session } = useSession();
-    const router = useRouter();
     const [errorMessage, formAction, isPending] = useFormState(
         authenticate,
         undefined,
@@ -26,8 +22,6 @@ export default function Login() {
             showConfirmButton: true
         })
     }
-
-    if (session) return router.push("/dashboard")
 
     return (
         <div className="container mx-auto my-10 bg-primary rounded-lg py-3 lg:w-3/6">

@@ -21,11 +21,8 @@ import {
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import {
-    countUser,
     getJurnal,
     countJurnal,
-    getMessage,
-    countMessage
 } from "@/app/services/user/queries"
 import JurnalTableItem from "../jurnal/jurnal-table-item"
 
@@ -36,11 +33,8 @@ export default async function UserDashboard() {
     if (!session) return redirect("/")
 
     // data
-    const totalUser = await countUser();
     const listJurnal = await getJurnal(0, 5);
     const totalJurnal = await countJurnal();
-    const listMessage = await getMessage(0, 5)
-    const totalMessage = await countMessage();
 
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -74,7 +68,7 @@ export default async function UserDashboard() {
                             </div>
                             <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
                                 <Link href="/user/jurnal">
-                                    Liha Semua
+                                    Lihat Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>
                             </Button>
