@@ -6,8 +6,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -21,27 +19,18 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { useState } from "react"
 
-export default function AdminNavbar() {
+export default function UserAdminNavbar() {
 
     const adminNav = [
         {
-            href: "/admin/dashboard",
+            href: "/user/dashboard",
             name: "Dashboard"
         },
         {
-            href: "/admin/jurnal",
+            href: "/user/jurnal",
             name: "Jurnal"
         },
-        {
-            href: "/admin/messages",
-            name: "Pesan"
-        },
-        {
-            href: "/admin/users",
-            name: "Pengguna"
-        }
     ]
 
     return (
@@ -124,7 +113,7 @@ export default function AdminNavbar() {
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator /> */}
                             <DropdownMenuItem>
-                                <button onClick={() => signOut({ redirectTo: "/auth/login"})}>Logout</button>
+                                <button onClick={() => signOut({ redirectTo: "/login"})}>Logout</button>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

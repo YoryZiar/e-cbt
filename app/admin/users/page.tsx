@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table"
 import {
     getUser
-} from "@/app/services/user/queries"
+} from "@/app/services/admin/queries"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 

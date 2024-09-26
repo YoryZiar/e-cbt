@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table"
 import {
     getJurnal
-} from "@/app/services/admin/queries"
+} from "@/app/services/user/queries"
 import JurnalTableItem from "./jurnal-table-item"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"

@@ -26,11 +26,10 @@ import {
     countJurnal,
     getMessage,
     countMessage
-} from "@/app/services/admin/queries"
+} from "@/app/services/user/queries"
 import JurnalTableItem from "../jurnal/jurnal-table-item"
-import MessagesItem from "../messages/messages-table-item"
 
-export default async function Dashboard() {
+export default async function UserDashboard() {
     // session
     const session = await auth();
         
@@ -61,46 +60,8 @@ export default async function Dashboard() {
                             </p> */}
                         </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-01-chunk-1" className="bg-secondary border-0 shadow-lg shadow-primary">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-900">
-                                Total Pesan
-                            </CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{totalMessage}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +180.1% from last month
-                            </p> */}
-                        </CardContent>
-                    </Card>
-                    <Card x-chunk="dashboard-01-chunk-2" className="bg-secondary border-0 shadow-lg shadow-primary">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-900">Pengguna</CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{totalUser}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +19% from last month
-                            </p> */}
-                        </CardContent>
-                    </Card>
-                    {/* <Card x-chunk="dashboard-01-chunk-3">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-                            <Activity className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">+573</div>
-                            <p className="text-xs text-muted-foreground">
-                                +201 since last hour
-                            </p>
-                        </CardContent>
-                    </Card> */}
                 </div>
-                <div className="grid gap-4 grid-cols-1 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-4 grid-cols-1 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
                     <Card
                         className="xl:col-span-2 bg-secondary border-0 shadow-lg shadow-primary" x-chunk="dashboard-01-chunk-4"
                     >
@@ -112,7 +73,7 @@ export default async function Dashboard() {
                                 </CardDescription>
                             </div>
                             <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
-                                <Link href="/jurnal">
+                                <Link href="/user/jurnal">
                                     Liha Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>
@@ -141,28 +102,6 @@ export default async function Dashboard() {
                                     })}
                                 </TableBody>
                             </Table>
-                        </CardContent>
-                    </Card>
-                    <Card x-chunk="dashboard-01-chunk-5" className="bg-secondary border-0 shadow-lg shadow-primary">
-                        <CardHeader className="flex flex-row items-center">
-                            <CardTitle>Pesan Terbaru</CardTitle>
-                            <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
-                                <Link href="/messages">
-                                    Liha Semua
-                                    <ArrowUpRight className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                        </CardHeader>
-                        <CardContent className="grid gap-8">
-                            {listMessage.map((message, index) => {
-                                return (
-                                    <MessagesItem
-                                        key={message.id}
-                                        message={message}
-                                        index={index + 1}
-                                    />
-                                )
-                            })}
                         </CardContent>
                     </Card>
                 </div>

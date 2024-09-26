@@ -4,7 +4,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { getMessage } from "@/app/services/user/queries"
+import { getMessage } from "@/app/services/admin/queries"
 import MessagesItem from "./messages-table-item"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
