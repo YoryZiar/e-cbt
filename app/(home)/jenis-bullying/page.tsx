@@ -28,12 +28,12 @@ export default function JenisBullying() {
                 </Link>
             </div>
             <div className="text-center my-5">
-                <Link href="/" className="mr-3">
+                <Link href="/pasal" className="mr-3">
                     <Button className="bg-secondary hover:bg-violet-600 hover:text-slate-200 text-2xl">Back</Button>
                 </Link>
-                <Link href="/">
+                {/* <Link href="/">
                     <Button className="bg-secondary hover:bg-violet-600 hover:text-slate-200 text-2xl">Next</Button>
-                </Link>
+                </Link> */}
             </div>
         </div>
     )

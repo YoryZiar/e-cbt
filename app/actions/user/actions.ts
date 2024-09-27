@@ -4,23 +4,58 @@ import { auth } from "@/auth"
 import prisma from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { RegisterSchema } from "@/app/types/validations/register"
 
 // register
+// export async function register(formData: FormData) {
+//     try {
+//         const userRegister = await prisma.user.create({
+//             data: {
+//                 name: formData.get('name') as string,
+//                 email: formData.get('email') as string,
+//                 password: formData.get('password') as string
+//             }
+//         })
+//     } catch (error) {
+//         console.log("Error registering user: " + error);
+//         throw new Error("Error register")
+//     }
+
+//     revalidatePath("/login")
+// }
+
 export async function register(formData: FormData) {
-    try {
-        const userRegister = await prisma.user.create({
-            data: {
-                name: formData.get('name') as string,
-                email: formData.get('email') as string,
-                password: formData.get('password') as string
-            }
-        })
-    } catch (error) {
-        console.log("Error registering user: " + error);
-        throw new Error("Error register")
+    const result = await RegisterSchema.safeParse(Object.fromEntries(formData));
+
+    if (!result.success) {
+        return {
+            error: result.error.flatten().fieldErrors
+        }
     }
 
-    revalidatePath("/login")
+    const response = await prisma.user.create({
+        data: {
+            name: formData.get('name') as string,
+            email: formData.get('email') as string,
+            password: formData.get('password') as string
+        }
+    }).then((result) => {
+        return result
+    }).catch((err) => {
+        console.log("Error registering user: " + err);
+        let {status} = err?.response;
+
+        if (err?.response?.data?.errors && !err?.response?.data?.errors?.detail) {
+            return {
+                errors: err?.response?.data?.errors
+            }
+        } else {
+            throw new Error("Error register")
+        }
+    });
+
+    revalidatePath("/login");
+    return response
 }
 
 // send message from contact form
@@ -111,7 +146,7 @@ export async function destroyJurnal(jurnalId: string) {
                 id: jurnalId.toString()
             }
         });
-        
+
         revalidatePath("/user/jurnal")
         return jurnalById
     } catch (error) {

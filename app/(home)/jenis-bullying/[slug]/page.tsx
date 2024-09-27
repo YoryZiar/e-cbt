@@ -11,6 +11,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="container bg-primary rounded-lg mx-auto p-3 mt-10 text-slate-200 text-sm md:p-5 lg:p-10">
             <h1 className="text-center my-3 text-lg">{data[0].title}</h1>
             <div className="bg-secondary w-1/2 mx-auto rounded-lg overflow-hidden">
+            
                 <img src={data[0].image} alt="" />
             </div>
             <p className="my-3">{data[0].content}</p>
