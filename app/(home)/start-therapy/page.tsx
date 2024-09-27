@@ -10,11 +10,15 @@ import { useCreateJurnal } from "@/app/services/jurnal/mutation"
 
 export default function StartTherapy() {
     const { data: session } = useSession();
-    if (!session) return redirect("/login")
+    const [formData, setFormData] = useState(jurnalInitialState);
+
+
+    // if (!session) {
+    //     return redirect("/login")
+    // }
 
     // create jurnal
-    const [formData, setFormData] = useState(jurnalInitialState);
-    const [errors, setErrors] = useState({});
+    // const [errors, setErrors] = useState({});
     const jurnalMutation = useCreateJurnal();
 
     const handleFormChange = (e: any) => {
@@ -34,15 +38,9 @@ export default function StartTherapy() {
             if (value !== null) {
                 data.append(key, value);
             }
-        });
-
-        console.log(errors);
-        
+        });        
 
         (await jurnalMutation).mutateAsync(data).then((res) => {
-            if (res) {
-                return setErrors(res);
-            }
             setFormData(jurnalInitialState)
         })
     }
