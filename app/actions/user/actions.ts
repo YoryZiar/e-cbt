@@ -5,6 +5,9 @@ import prisma from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { RegisterSchema } from "@/app/types/validations/register"
+import { MessageSchema } from "@/app/types/validations/message"
+import { JurnalSchema } from "@/app/types/validations/jurnal"
+import { CommentSchema } from "@/app/types/validations/comment"
 
 // register
 // export async function register(formData: FormData) {
@@ -25,7 +28,7 @@ import { RegisterSchema } from "@/app/types/validations/register"
 // }
 
 export async function register(formData: FormData) {
-    const result = await RegisterSchema.safeParse(Object.fromEntries(formData));
+    const result = RegisterSchema.safeParse(Object.fromEntries(formData));
 
     if (!result.success) {
         return {
@@ -42,7 +45,7 @@ export async function register(formData: FormData) {
     }).then((result) => {
         return result
     }).catch((err) => {
-        console.log("Error registering user: " + err);
+        console.log("Error register user: " + err);
         // let {status} = err?.response;
 
         if (err?.response?.data?.errors && !err?.response?.data?.errors?.detail) {
@@ -50,7 +53,7 @@ export async function register(formData: FormData) {
                 errors: err?.response?.data?.errors
             }
         } else {
-            throw new Error("Error ketika melakukan registrasi")
+            throw new Error("Error ketika melakukan register")
         }
     });
 
@@ -62,20 +65,31 @@ export async function register(formData: FormData) {
 export async function sendMessage(
     formData: FormData
 ) {
-    try {
-        const createMessage = await prisma.message.create({
-            data: {
-                title: formData.get('title') as string,
-                email: formData.get('email') as string,
-                message: formData.get('pesan') as string
-            }
-        });
-    } catch (error) {
-        console.log("Error create message: " + error);
-        throw new Error("Failed to create message")
+    const result = MessageSchema.safeParse(Object.fromEntries(formData));
+
+    if (!result.success) {
+        return {
+            error: result.error.flatten().fieldErrors
+        }
     }
 
-    redirect("/#Home")
+    const { title, email, message } = result.data
+    const createMessage = await prisma.message.create({
+        data: {
+            title,
+            email,
+            message
+        }
+    }).then((res) => {
+        return res
+    }).catch((err) => {
+        console.log("Error ketika mengirim pesan: " + err);
+        
+        throw new Error("Error mengirim pesan")
+    });
+
+    revalidatePath("/");
+    return createMessage
 }
 
 // create jurnal
@@ -134,8 +148,7 @@ export async function createComment(formData: FormData) {
         throw new Error("Failed to create Comment")
     }
 
-    revalidatePath(`/jurnal/${formData.get("jurnalId")}`)
-    redirect(`/jurnal/${formData.get("jurnalId")}`)
+    revalidatePath(`/user/jurnal/${formData.get("jurnalId")}`)
 }
 
 // delete jurnal

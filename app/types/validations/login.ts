@@ -1,10 +1,20 @@
-import { object, string } from "zod";
+import { z } from "zod";
 
-export const signInSchema = object({
-    username: string({ required_error: "Username is required" })
-        .min(1, "Username is required"),
-    password: string({ required_error: "Password is required" })
-        .min(1, "Password is required")
-        .min(3, "Password must be more than 2 characters")
-        .max(32, "Password must be less than 32 characters"),
+// signIn
+export const signInInitialState: initProp = {
+    email: "",
+    password: ""
+}
+
+type initProp = {
+    email: string | "",
+    password: string | ""
+}
+
+// signIn schema
+export const SignInSchema = z.object({
+    email: z.string().min(1, "Emaili tidak boleh kosong!"),
+    password: z.string().min(1, "Password tidak boleh kosong!"),
 })
+
+export type Login = z.infer<typeof SignInSchema>

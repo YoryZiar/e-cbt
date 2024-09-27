@@ -8,7 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
-import { initialState } from "@/app/types/validations/register";
+import {
+    initialState
+} from "@/app/types/validations/register";
 import { useRegisterUser } from "@/app/services/user/mutation";
 
 export default function Login() {
