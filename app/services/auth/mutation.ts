@@ -14,7 +14,7 @@ export const useSignInUser = async () => {
             showConfirmButton: false
         });
 
-        return await authenticate(formData);
+        return await authenticate('credentials', formData);
     }
 
     return useMutation({
