@@ -4,7 +4,7 @@ import { useState } from "react"
 import {
     messageInitialState
 } from "@/app/types/validations/message"
-import { useSendMessage } from "@/app/services/user/mutation";
+import { useSendMessage } from "@/app/services/message/mutation";
 
 function ContactContent() {
     const [messageForm, setMessageForm] = useState(messageInitialState);
@@ -53,7 +53,7 @@ function ContactContent() {
                 <label htmlFor="email" className="block mx-5">
                     <span className="block font-normal text-start text-slate-200 my-1">Email</span>
                     <input
-                        type="text"
+                        type="email"
                         name="email"
                         id="email"
                         value={messageForm.email}
