@@ -43,14 +43,14 @@ export async function register(formData: FormData) {
         return result
     }).catch((err) => {
         console.log("Error registering user: " + err);
-        let {status} = err?.response;
+        // let {status} = err?.response;
 
         if (err?.response?.data?.errors && !err?.response?.data?.errors?.detail) {
             return {
                 errors: err?.response?.data?.errors
             }
         } else {
-            throw new Error("Error register")
+            throw new Error("Error ketika melakukan registrasi")
         }
     });
 
