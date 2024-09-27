@@ -1,9 +1,5 @@
 import {
-    register,
-    createJurnal,
-    createComment,
-    destroyJurnal,
-    destroyMessage
+    register
 } from "@/app/actions/user/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
@@ -45,23 +41,23 @@ export const useRegisterUser = async () => {
         },
         onSuccess: async (res) => {
             Swal.close()
-            if (res) {
-                if (res) {
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Pastikan data yang diinputkan telah sesuai',
-                        icon: 'error'
-                    })
-                } else {
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Pastikan data yang diinputkan telah sesuai',
-                        icon: 'error'
-                    })
-                }
+            // if (res) {
+            //     if (res) {
+            //         Swal.fire({
+            //             title: 'Gagal',
+            //             text: 'Pastikan data yang diinputkan telah sesuai',
+            //             icon: 'error'
+            //         })
+            //     } else {
+            //         Swal.fire({
+            //             title: 'Gagal',
+            //             text: 'Pastikan data yang diinputkan telah sesuai',
+            //             icon: 'error'
+            //         })
+            //     }
 
-                return res;
-            }
+            //     return res;
+            // }
             Swal.fire({
                 title: "Register berhasil",
                 text: "Berhasil melakukan registrasi!",

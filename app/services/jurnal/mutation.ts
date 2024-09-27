@@ -1,20 +1,20 @@
-import { sendMessage } from "@/app/actions/message/actions";
+import { createJurnal } from "@/app/actions/jurnal/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 // send message
-export const useSendMessage = async () => {
+export const useCreateJurnal = async () => {
     const queryClient = useQueryClient();
 
     const create = async (formData: FormData) => {
         Swal.fire({
-            title: "Mengirim Pesan",
-            text: "Sedang mengirim pesan...",
+            title: "Jurnal",
+            text: "Sedang membuat jurnal...",
             icon: "info",
             showConfirmButton: false
         });
 
-        return await sendMessage(formData);
+        return await createJurnal(formData);
     }
 
     return useMutation({
@@ -24,7 +24,7 @@ export const useSendMessage = async () => {
                 console.log(`Error: ${error}`);
             } else {
                 await queryClient.invalidateQueries({
-                    queryKey: ["pesan"],
+                    queryKey: ["jurnal"],
                 });
             }
         },
@@ -32,7 +32,7 @@ export const useSendMessage = async () => {
             Swal.close()
             Swal.fire({
                 title: "Gagal",
-                text: "Gagal mengirim pesan",
+                text: "Gagal membuat jurnal",
                 icon: "error"
             });
             return error;
@@ -42,13 +42,13 @@ export const useSendMessage = async () => {
             // if (res) {
             //     if (res) {
             //         Swal.fire({
-            //             title: 'Pesan gagal dikirim',
+            //             title: 'Jurnal gagal dibuat',
             //             text: 'Pastikan data yang diinputkan telah sesuai',
             //             icon: 'error'
             //         })
             //     } else {
             //         Swal.fire({
-            //             title: 'Pesan gagal dikirim',
+            //             title: 'Jurnal gagal dibuat',
             //             text: 'Pastikan data yang diinputkan telah sesuai',
             //             icon: 'error'
             //         })
@@ -58,7 +58,7 @@ export const useSendMessage = async () => {
             // }
             Swal.fire({
                 title: "Berhasil",
-                text: "Pesan berhasil terkirim!",
+                text: "Jurnal berhasil dibuat!",
                 icon: "success"
             })
         }
