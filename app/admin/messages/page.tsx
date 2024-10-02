@@ -14,7 +14,7 @@ export default async function Messages() {
     const session = await auth();
     if (!session) return redirect("/")
 
-    const listMessages = await getMessage(0, 10);
+    const listMessages = await getMessage(0, 100);
 
     return (
         <div className="container mx-auto my-5 p-2 w-full lg:w-3/5">

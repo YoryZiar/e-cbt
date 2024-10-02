@@ -25,7 +25,7 @@ export default async function Jurnal() {
     const session = await auth();
     if (!session) return redirect("/")
 
-    const listJurnal = await getJurnal(0, 10);
+    const listJurnal = await getJurnal(0, 100);
 
     return (
         <div className="container mx-auto my-5 p-2">
