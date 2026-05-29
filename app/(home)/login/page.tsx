@@ -15,6 +15,7 @@ import { useRegisterUser } from "@/app/services/user/mutation";
 export default function Login() {
     const [registerFormData, setRegisterFormData] = useState(initialState);
     const [registerErrors, setRegisterErrors] = useState({});
+    const [isRegisterPending, setIsRegisterPending] = useState(false);
     const registerUserMutation = useRegisterUser();
 
     // login action
@@ -44,6 +45,7 @@ export default function Login() {
 
     const handleRegisterSubmitForm = async (e: any) => {
         e.preventDefault();
+        setIsRegisterPending(true);
 
         const data = new FormData();
         Object.entries(registerFormData).forEach(([key, value]) => {
@@ -52,9 +54,12 @@ export default function Login() {
             }
         });
 
-        (await registerUserMutation).mutateAsync(data).then((res) => {
-            setRegisterFormData(initialState)
-        })
+        try {
+            await (await registerUserMutation).mutateAsync(data);
+            setRegisterFormData(initialState);
+        } finally {
+            setIsRegisterPending(false);
+        }
     }
 
     return (
@@ -108,8 +113,20 @@ export default function Login() {
                                     />
                                 </label>
                                 <div className="pt-4">
-                                    <Button className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)]">
-                                        Login
+                                    <Button
+                                        type="submit"
+                                        disabled={isPending}
+                                        className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)] disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {isPending ? (
+                                            <span className="flex items-center justify-center gap-2">
+                                                <svg className="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                </svg>
+                                                Memproses...
+                                            </span>
+                                        ) : "Login"}
                                     </Button>
                                 </div>
                             </form>
@@ -154,8 +171,20 @@ export default function Login() {
                                     />
                                 </label>
                                 <div className="pt-4">
-                                    <Button type="submit" className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)]">
-                                        Register
+                                    <Button
+                                        type="submit"
+                                        disabled={isRegisterPending}
+                                        className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)] disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {isRegisterPending ? (
+                                            <span className="flex items-center justify-center gap-2">
+                                                <svg className="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                </svg>
+                                                Memproses...
+                                            </span>
+                                        ) : "Register"}
                                     </Button>
                                 </div>
                             </form>

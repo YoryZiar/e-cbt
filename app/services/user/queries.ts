@@ -101,7 +101,12 @@ export async function getCommentByJurnal(id: string) {
             userId: doc.userId,
             content: doc.content,
             createdAt: new Date(doc.$createdAt),
-            User: profileMap[doc.userId] || { name: "Unknown User" }
+            User: profileMap[doc.userId] ? {
+                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
+                name: profileMap[doc.userId].name,
+                email: profileMap[doc.userId].email,
+                telephone: profileMap[doc.userId].telephone
+            } : { name: "Unknown User", email: "Unknown Email" }
         }));
     } catch (error) {
         console.log("Database error: ", error);

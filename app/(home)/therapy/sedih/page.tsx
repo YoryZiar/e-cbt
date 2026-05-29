@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowLeft, Sparkles } from "lucide-react"
 
-function sedihContent() {
+function SedihContent() {
     return (
         <div className="min-h-screen py-24 relative overflow-hidden flex items-center justify-center">
             {/* Background effects */}
@@ -36,8 +36,8 @@ function sedihContent() {
     )
 }
 
-export default function sedihPage() {
+export default function SedihPage() {
     return (
-        <sedihContent />
+        <SedihContent />
     )
 }

@@ -28,7 +28,13 @@ export async function createJurnal(formData: FormData) {
         });
 
         revalidatePath("/start-therapy");
-        return resultJurnal;
+        return {
+            id: resultJurnal.$id,
+            title: resultJurnal.title,
+            content: resultJurnal.content,
+            userId: resultJurnal.userId,
+            createdAt: resultJurnal.$createdAt
+        };
     } catch (err) {
         console.log("Error ketika membuat jurnal: ", err);
         if (err instanceof AppwriteException) {

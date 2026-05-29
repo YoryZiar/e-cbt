@@ -95,7 +95,12 @@ export async function getJurnal(
             content: doc.content,
             createdAt: new Date(doc.$createdAt),
             userId: doc.userId,
-            User: profileMap[doc.userId] || { name: "Unknown User" }
+            User: profileMap[doc.userId] ? {
+                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
+                name: profileMap[doc.userId].name,
+                email: profileMap[doc.userId].email,
+                telephone: profileMap[doc.userId].telephone
+            } : { name: "Unknown User", email: "Unknown Email" }
         }));
     } catch (error) {
         console.log("Database error: ", error);
@@ -121,7 +126,7 @@ export async function countJurnal() {
 // get jurnal by id
 export async function getJurnalById(id: string) {
     try {
-        const { databases } = await createSessionClient();
+        const { databases } = await createAdminClient();
         const doc = await databases.getDocument(DATABASE_ID, COLLECTIONS.JURNALS, id);
         return {
             id: doc.$id,
@@ -180,7 +185,7 @@ export async function countMessage() {
 // get comment
 export async function getCommentByJurnal(id: string) {
     try {
-        const { databases } = await createSessionClient();
+        const { databases } = await createAdminClient();
         const commentByJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.COMMENTS, [
             Query.equal("jurnalId", id),
             Query.orderAsc("$createdAt")
@@ -202,7 +207,12 @@ export async function getCommentByJurnal(id: string) {
             userId: doc.userId,
             content: doc.content,
             createdAt: new Date(doc.$createdAt),
-            User: profileMap[doc.userId] || { name: "Unknown User" }
+            User: profileMap[doc.userId] ? {
+                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
+                name: profileMap[doc.userId].name,
+                email: profileMap[doc.userId].email,
+                telephone: profileMap[doc.userId].telephone
+            } : { name: "Unknown User", email: "Unknown Email" }
         }));
     } catch (error) {
         console.log("Database error: ", error);

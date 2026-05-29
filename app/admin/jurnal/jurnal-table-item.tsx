@@ -63,25 +63,25 @@ export default function JurnalTableItem({
     }
 
     return (
-        <TableRow key={jurnal.id}>
+        <TableRow key={jurnal.id} className="border-white/10 hover:bg-white/5 transition-colors">
             <TableCell>
-                <div className="font-medium text-slate-900 text-center">{index}</div>
+                <div className="font-medium text-slate-300 text-center">{index}</div>
             </TableCell>
             <TableCell>
-                <div className="font-medium text-slate-900 text-center">{jurnal.title}</div>
+                <div className="font-medium text-slate-300 text-center">{jurnal.title}</div>
             </TableCell>
             <TableCell>
-                <div className="font-medium text-slate-900 text-center">{jurnal.User.email}</div>
+                <div className="font-medium text-slate-300 text-center">{jurnal.User.email}</div>
             </TableCell>
             <TableCell>
-                <div className="font-medium text-slate-900 text-center">{jurnal.createdAt.toLocaleDateString()}</div>
+                <div className="font-medium text-slate-300 text-center">{jurnal.createdAt.toLocaleDateString()}</div>
             </TableCell>
             <TableCell>
                 <div className="font-medium w-3/6 mx-auto flex flex-col">
                     <Link href={`/admin/jurnal/${jurnal.id}`}>
-                        <Button className="text-slate-200 hover:bg-purple-800 w-full">Detail</Button>
+                        <Button className="w-full bg-secondary text-primary hover:bg-[#c4bdff]">Detail</Button>
                     </Link>
-                    <Button onClick={removeJurnal} className="text-slate-200 bg-red-700 hover:bg-red-800 mt-2">Hapus</Button>
+                    <Button onClick={removeJurnal} className="text-slate-200 bg-red-500/20 text-red-400 hover:bg-red-500/30 mt-2">Hapus</Button>
                 </div>
             </TableCell>
         </TableRow>
