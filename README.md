@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌟 E-CBT (Electronic Cognitive Behavioral Therapy) Platform
 
-## Getting Started
+Platform terapi perilaku kognitif elektronik (e-CBT) yang dirancang dengan desain modern, bersih, dan estetik bertemakan *dark-mode glassmorphism*. Aplikasi ini dibangun menggunakan **Next.js 16** dan terintegrasi dengan **Appwrite** sebagai Backend-as-a-Service (BaaS) untuk pengelolaan autentikasi, database, dan hak akses pengguna.
 
-First, run the development server:
+---
 
+## 🚀 Fitur Utama
+
+- **Aesthetic Glassmorphism UI**: Antarmuka premium dengan efek blur transparan yang dinamis, palet warna gelap yang harmonis, dan mikro-animasi interaktif untuk kenyamanan maksimal pengguna.
+- **Role-Based Access Control (RBAC)**: Pembagian hak akses yang aman antara **Admin** (menggunakan label `admin` di Appwrite) dan **User** biasa.
+- **Dashboard Admin**: Panel pengelolaan terpusat untuk memantau aktivitas jurnal pengguna, pesan masuk, dan statistik platform secara *real-time*.
+- **Dashboard User**: Panel personal bagi pengguna untuk menulis jurnal terapi, membaca feedback, dan mengelola profil pribadi dengan aman.
+- **CBT Journaling & Comments**: Pengguna dapat menulis jurnal harian CBT mereka, dan admin dapat memberikan interaksi atau komentar untuk membantu proses terapi.
+- **Direct Messaging System**: Layanan pesan instan bagi pengguna untuk menghubungi admin platform jika memerlukan bantuan tambahan.
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- **Frontend Framework**: [Next.js 16](https://nextjs.org/) (App Router, React 19)
+- **Styling**: [TailwindCSS v4](https://tailwindcss.com/) & Vanilla CSS
+- **Backend-as-a-Service**: [Appwrite](https://appwrite.io/) (Auth & Database)
+- **UI Components & Icons**: [Ant Design](https://ant.design/) & [Lucide React](https://lucide.dev/)
+- **Alerts**: [SweetAlert2](https://sweetalert2.github.io/) dengan integrasi React
+
+---
+
+## ⚙️ Persyaratan Sistem & Instalasi
+
+Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (versi 18+) dan [pnpm](https://pnpm.io/) di perangkat Anda.
+
+### 1. Kloning Repositori
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/YoryZiar/e-cbt.git
+cd e-cbt
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Instal Dependensi
+Proyek ini menggunakan **pnpm** sebagai package manager:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Konfigurasi Environment Variables
+Salin file `.env.example` menjadi `.env` baru:
+```bash
+cp .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Buka file `.env` dan lengkapi nilai variabel berikut menggunakan informasi dari dashboard Appwrite Console Anda:
+```env
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=id_project_anda
+NEXT_APPWRITE_KEY=api_key_secret_anda
+```
+> ⚠️ **PENTING**: Pastikan API Key (`NEXT_APPWRITE_KEY`) yang Anda buat memiliki hak akses penuh (scopes) untuk **users** dan **databases**.
 
-## Learn More
+### 4. Inisialisasi Database Appwrite
+Jalankan skrip otomatis berikut untuk membuat database, collections, atribut, dan aturan perizinan (permissions) di Appwrite Anda secara otomatis:
+```bash
+node scripts/setup-appwrite.js
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Jalankan Development Server
+Setelah inisialisasi selesai, jalankan server lokal:
+```bash
+pnpm dev
+```
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat hasilnya.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 📂 Struktur Folder Proyek
 
-## Deploy on Vercel
+```text
+e-cbt/
+├── app/                  # Next.js App Router (Halaman & Layout)
+│   ├── (home)/           # Landing page & Auth publik
+│   ├── admin/            # Dashboard & Panel Admin
+│   ├── user/             # Dashboard & Jurnal User/Pasien
+│   └── auth/             # Halaman penanganan autentikasi
+├── components/           # Reusable UI Components
+├── lib/                  # Helper & Integrasi Appwrite (Client & Server)
+├── public/               # Asset statis (Gambar, SVG, dll)
+├── scripts/              # Skrip setup otomatis (setup-appwrite.js)
+├── .env.example          # Template konfigurasi environment
+├── README.md             # Dokumentasi proyek
+└── package.json          # Dependensi & Skrip proyek
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 📄 Skrip yang Tersedia
+
+Dalam file `package.json`, Anda dapat menjalankan:
+
+- `pnpm dev` : Menjalankan server pengembangan lokal.
+- `pnpm build` : Membangun aplikasi Next.js untuk produksi.
+- `pnpm start` : Menjalankan aplikasi hasil build untuk produksi.
+- `pnpm lint` : Menjalankan ESLint untuk memeriksa kualitas kode.
+
+---
+
+## 🔒 Lisensi
+
+Proyek ini dibuat untuk keperluan medis & terapi kognitif elektronik yang aman. Silakan merujuk pada kebijakan privasi data medis sebelum mendistribusikan secara komersial.
