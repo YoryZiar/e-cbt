@@ -1,7 +1,8 @@
 'use server'
 
-import prisma from "@/lib/db"
 import { auth } from "@/auth"
+import { createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server"
+import { ID, AppwriteException } from "node-appwrite"
 import { revalidatePath } from "next/cache"
 import { JurnalSchema } from "@/app/types/validations/jurnal"
 
@@ -15,34 +16,26 @@ export async function createJurnal(formData: FormData) {
         }
     }
 
-    const session = await auth()
-    const resultJurnal = await prisma.jurnal.create({
-        data: {
+    try {
+        const session = await auth()
+        if (!session?.user) throw new Error("Not authenticated");
+
+        const { databases } = await createSessionClient();
+        const resultJurnal = await databases.createDocument(DATABASE_ID, COLLECTIONS.JURNALS, ID.unique(), {
             title: formData.get('title') as string,
             content: formData.get('content') as string,
-            User: {
-                connect: {
-                    email: session?.user?.email as string
-                }
-            }
-        },
-        include: {
-            User: true
-        }
-    }).then((res) => {
-        return res
-    }).catch((err) => {
-        console.log("Error ketika membuat jurnal: " + err);
+            userId: session.user.id
+        });
 
-        if (err?.response?.data?.errors && !err?.response?.data?.errors?.detail) {
+        revalidatePath("/start-therapy");
+        return resultJurnal;
+    } catch (err) {
+        console.log("Error ketika membuat jurnal: ", err);
+        if (err instanceof AppwriteException) {
             return {
-                errors: err?.response?.data?.errors
+                errors: [err.message]
             }
-        } else {
-            throw new Error("Error membuat jurnal")
         }
-    });
-
-    revalidatePath("/start-therapy");
-    return resultJurnal
+        throw new Error("Error membuat jurnal")
+    }
 }

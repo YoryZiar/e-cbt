@@ -2,6 +2,8 @@ import Link from "next/link"
 import {
     ArrowUpRight,
     Users,
+    MessageSquareText,
+    BookOpen
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -45,146 +47,135 @@ export default async function Dashboard() {
     const totalMessage = await countMessage();
 
     return (
-        <div className="flex min-h-screen w-full flex-col">
-            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-                <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-                    <Card x-chunk="dashboard-01-chunk-0" className="bg-secondary border-0 shadow-lg shadow-primary">
+        <div className="flex w-full flex-col max-w-7xl mx-auto">
+            <main className="flex flex-1 flex-col gap-6 p-4 md:gap-8 md:p-8 mt-12">
+                
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <Card className="bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] hover:-translate-y-2 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-900">
+                            <CardTitle className="text-sm font-medium text-slate-300">
                                 Total Jurnal
                             </CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
+                            <div className="bg-secondary/20 p-2 rounded-xl border border-secondary/30">
+                                <BookOpen className="h-5 w-5 text-secondary" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalJurnal}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +20.1% from last month
-                            </p> */}
+                            <div className="text-4xl font-bold text-white mt-2">{totalJurnal}</div>
                         </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-01-chunk-1" className="bg-secondary border-0 shadow-lg shadow-primary">
+                    <Card className="bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] hover:-translate-y-2 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-900">
+                            <CardTitle className="text-sm font-medium text-slate-300">
                                 Total Pesan
                             </CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
+                            <div className="bg-[#b3aaff]/20 p-2 rounded-xl border border-[#b3aaff]/30">
+                                <MessageSquareText className="h-5 w-5 text-[#b3aaff]" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalMessage}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +180.1% from last month
-                            </p> */}
+                            <div className="text-4xl font-bold text-white mt-2">{totalMessage}</div>
                         </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-01-chunk-2" className="bg-secondary border-0 shadow-lg shadow-primary">
+                    <Card className="bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] hover:-translate-y-2 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-900">Pengguna</CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium text-slate-300">Pengguna</CardTitle>
+                            <div className="bg-blue-400/20 p-2 rounded-xl border border-blue-400/30">
+                                <Users className="h-5 w-5 text-blue-400" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalUser}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +19% from last month
-                            </p> */}
+                            <div className="text-4xl font-bold text-white mt-2">{totalUser}</div>
                         </CardContent>
                     </Card>
-                    {/* <Card x-chunk="dashboard-01-chunk-3">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-                            <Activity className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">+573</div>
-                            <p className="text-xs text-muted-foreground">
-                                +201 since last hour
-                            </p>
-                        </CardContent>
-                    </Card> */}
                 </div>
-                <div className="grid gap-4 grid-cols-1 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <Card
-                        className="xl:col-span-2 bg-secondary border-0 shadow-lg shadow-primary" x-chunk="dashboard-01-chunk-4"
-                    >
-                        <CardHeader className="flex flex-row items-center">
-                            <div className="grid gap-2 text-slate-900">
-                                <CardTitle>Jurnal</CardTitle>
-                                <CardDescription className="text-slate-600">
-                                    Daftar Jurnal Terbaru.
+
+                <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 xl:grid-cols-3">
+                    <Card className="xl:col-span-2 bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2.5rem] overflow-hidden">
+                        <CardHeader className="flex flex-row items-center border-b border-white/5 bg-white/5 px-8 py-6">
+                            <div className="grid gap-1">
+                                <CardTitle className="text-2xl text-white">Jurnal Terbaru</CardTitle>
+                                <CardDescription className="text-slate-400">
+                                    Daftar catatan dan tulisan yang baru dibagikan.
                                 </CardDescription>
                             </div>
-                            <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
+                            <Button asChild size="sm" className="ml-auto gap-1 bg-secondary text-primary hover:bg-[#c4bdff] rounded-full px-4 h-10 transition-all font-semibold">
                                 <Link href="/admin/jurnal">
-                                    Liha Semua
+                                    Lihat Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>
                             </Button>
                         </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="border-primary">
-                                        <TableHead className="text-slate-600 text-center">No</TableHead>
-                                        <TableHead className="text-slate-600 text-center">Judul</TableHead>
-                                        <TableHead className="text-slate-600 text-center">Email</TableHead>
-                                        <TableHead className="text-slate-600 text-center">Tanggal</TableHead>
-                                        <TableHead className="text-slate-600 text-center">Aksi</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                {
-                                    listJurnal.length
-                                        ?
-                                        <TableBody>
-                                            {listJurnal.map((jurnal, index) => {
-                                                return (
-                                                    <JurnalTableItem
-                                                        key={jurnal.id}
-                                                        jurnal={jurnal}
-                                                        index={index + 1}
-                                                    />
-                                                )
-                                            })}
-                                        </TableBody>
-                                        :
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell colSpan={5}>
-                                                    <h1 className="text-center text-lg">Jurnal Kosong!</h1>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                }
-                            </Table>
+                        <CardContent className="p-0">
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-white/5">
+                                        <TableRow className="border-white/10 hover:bg-transparent">
+                                            <TableHead className="text-slate-300 text-center py-4 font-semibold">No</TableHead>
+                                            <TableHead className="text-slate-300 font-semibold">Judul</TableHead>
+                                            <TableHead className="text-slate-300 font-semibold">Email Pengguna</TableHead>
+                                            <TableHead className="text-slate-300 font-semibold">Tanggal</TableHead>
+                                            <TableHead className="text-slate-300 text-center font-semibold">Aksi</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    {
+                                        listJurnal.length
+                                            ?
+                                            <TableBody>
+                                                {listJurnal.map((jurnal, index) => {
+                                                    return (
+                                                        <JurnalTableItem
+                                                            key={jurnal.id}
+                                                            jurnal={jurnal}
+                                                            index={index + 1}
+                                                        />
+                                                    )
+                                                })}
+                                            </TableBody>
+                                            :
+                                            <TableBody>
+                                                <TableRow className="border-white/10 hover:bg-white/5">
+                                                    <TableCell colSpan={5} className="h-32">
+                                                        <h1 className="text-center text-slate-400 italic">Belum ada jurnal.</h1>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                    }
+                                </Table>
+                            </div>
                         </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-01-chunk-5" className="bg-secondary border-0 shadow-lg shadow-primary">
-                        <CardHeader className="flex flex-row items-center">
-                            <CardTitle>Pesan Terbaru</CardTitle>
-                            <Button asChild size="sm" className="ml-auto gap-1 bg-primary text-slate-200">
+
+                    <Card className="bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2.5rem] overflow-hidden">
+                        <CardHeader className="flex flex-row items-center border-b border-white/5 bg-white/5 px-6 py-6">
+                            <CardTitle className="text-xl text-white">Pesan Terbaru</CardTitle>
+                            <Button asChild size="icon" className="ml-auto bg-white/10 text-white hover:bg-secondary hover:text-primary rounded-full transition-all">
                                 <Link href="/admin/messages">
-                                    Liha Semua
                                     <ArrowUpRight className="h-4 w-4" />
                                 </Link>
                             </Button>
                         </CardHeader>
-                        {
-                            listMessages.length
-                                ?
-                                <CardContent className="grid gap-8">
-                                    {listMessages.map((message, index) => {
-                                        return (
-                                            <MessagesItem
-                                                key={message.id}
-                                                message={message}
-                                                index={index + 1}
-                                            />
-                                        )
-                                    })}
-                                </CardContent>
-                                :
-                                <CardContent className="grid gap-8">
-                                    <h1 className="text-center">Pesan Kosong!</h1>
-                                </CardContent>
-                        }
+                        <CardContent className="p-6">
+                            {
+                                listMessages.length
+                                    ?
+                                    <div className="grid gap-6">
+                                        {listMessages.map((message, index) => {
+                                            return (
+                                                <MessagesItem
+                                                    key={message.id}
+                                                    message={message}
+                                                    index={index + 1}
+                                                />
+                                            )
+                                        })}
+                                    </div>
+                                    :
+                                    <div className="h-32 flex items-center justify-center">
+                                        <h1 className="text-center text-slate-400 italic">Belum ada pesan.</h1>
+                                    </div>
+                            }
+                        </CardContent>
                     </Card>
                 </div>
             </main>

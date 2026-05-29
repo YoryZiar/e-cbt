@@ -34,46 +34,57 @@ function ContactContent() {
         })
     }
     return (
-        <div className="mx-auto">
-            <h1 className="text-slate-200 text-2xl text-center font-semibold lg:text-2xl">Kontak</h1>
-            {/* <p className="text-slate-200 text-sm text-center lg:text-lg">Tuliskan apa yang kamu alami saat mengalami kekerasan (bullying)!</p> */}
+        <div className="mx-auto w-full">
+            <div className="text-center mb-10">
+                <h1 className="text-white text-3xl md:text-4xl font-bold mb-3">Hubungi Kami</h1>
+                <p className="text-slate-400 font-light">Jangan ragu untuk mengirimkan pesan, pertanyaan, atau berbagi cerita Anda.</p>
+            </div>
 
-            <form onSubmit={handleSubmitFormMessage} className="bg-primary max-w-xs md:max-w-3xl mx-auto rounded-lg py-5 mt-5 lg:p-10 lg:max-w-5xl">
-                <label htmlFor="title" className="block mx-5">
-                    <span className="block font-normal text-start text-slate-200 mb-1">Nama</span>
-                    <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        value={messageForm.title}
-                        onChange={handleFormMessageChange}
-                        className="w-full rounded-md py-1 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary"
-                    />
-                </label>
-                <label htmlFor="email" className="block mx-5">
-                    <span className="block font-normal text-start text-slate-200 my-1">Email</span>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={messageForm.email}
-                        onChange={handleFormMessageChange}
-                        className="w-full rounded-md py-1 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary"
-                    />
-                </label>
-                <label htmlFor="message" className="block mx-5 my-5">
-                    <span className="block font-normal text-start text-slate-200 mb-1">Pesan</span>
+            <form onSubmit={handleSubmitFormMessage} className="bg-[#13072e]/50 backdrop-blur-md border border-white/10 max-w-3xl mx-auto rounded-3xl p-8 lg:p-12 shadow-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <label htmlFor="title" className="block">
+                        <span className="block font-medium text-slate-300 mb-2">Nama Lengkap</span>
+                        <input
+                            type="text"
+                            name="title"
+                            id="title"
+                            value={messageForm.title}
+                            onChange={handleFormMessageChange}
+                            placeholder="Masukkan nama Anda"
+                            className="w-full rounded-xl py-3 px-4 bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                        />
+                    </label>
+                    
+                    <label htmlFor="email" className="block">
+                        <span className="block font-medium text-slate-300 mb-2">Alamat Email</span>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={messageForm.email}
+                            onChange={handleFormMessageChange}
+                            placeholder="nama@email.com"
+                            className="w-full rounded-xl py-3 px-4 bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                        />
+                    </label>
+                </div>
+
+                <label htmlFor="message" className="block mb-8">
+                    <span className="block font-medium text-slate-300 mb-2">Pesan Anda</span>
                     <textarea
                         name="message"
                         id="message"
                         value={messageForm.message}
                         onChange={handleFormMessageChange}
-                        className="w-full rounded-md h-28 md:h-48 bg-slate-100 focus:outline-none p-2 focus:ring focus:ring-secondary"
-                    >
-                    </textarea>
+                        placeholder="Tuliskan pesan atau cerita Anda di sini..."
+                        className="w-full rounded-xl h-40 md:h-48 py-3 px-4 bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all resize-none"
+                    ></textarea>
                 </label>
+                
                 <div className='text-center'>
-                    <button className="py-2 px-4 bg-secondary text-lg rounded-md font-semibold text-primary">Kirim</button>
+                    <button type="submit" className="w-full md:w-auto px-10 py-4 bg-secondary hover:bg-[#c4bdff] text-primary text-lg rounded-xl font-bold transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(179,170,255,0.3)]">
+                        Kirim Pesan
+                    </button>
                 </div>
             </form>
         </div>

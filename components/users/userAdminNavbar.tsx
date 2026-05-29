@@ -1,6 +1,6 @@
 'use client'
 
-import { signOut } from "next-auth/react"
+import { logout } from "@/app/actions/auth/logout"
 import Link from "next/link"
 import {
     DropdownMenu,
@@ -34,12 +34,12 @@ export default function UserAdminNavbar() {
     ]
 
     return (
-        <div className="flex w-full flex-col">
-            <header className="sticky top-0 flex h-16 items-center gap-4 bg-secondary px-4 md:px-6">
+        <div className="flex w-full flex-col fixed top-0 left-0 right-0 z-50 p-4">
+            <header className="mx-auto w-full max-w-7xl flex h-16 items-center gap-4 px-6 md:px-8 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-full shadow-lg">
                 <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                     <Link
                         href="#"
-                        className="flex items-center gap-2 text-lg font-semibold md:text-base"
+                        className="flex items-center gap-2 text-lg font-semibold md:text-base text-white"
                     >
                         <Package2 className="h-6 w-6" />
                         <span className="sr-only">Acme Inc</span>
@@ -48,7 +48,7 @@ export default function UserAdminNavbar() {
                         return (
                             <Link
                                 href={nav.href}
-                                className="text-foreground transition-colors hover:text-foreground"
+                                className="text-slate-300 transition-colors hover:text-white"
                                 key={nav.name}
                             >
                                 {nav.name}
@@ -67,18 +67,18 @@ export default function UserAdminNavbar() {
                             <span className="sr-only">Toggle navigation menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left">
+                    <SheetContent side="left" className="bg-[#13072e] border-r-white/10 text-white">
                         <nav className="grid gap-6 text-lg font-medium">
                             <Link
                                 href="#"
-                                className="flex items-center gap-2 text-lg font-semibold"
+                                className="flex items-center gap-2 text-lg font-semibold text-white"
                             >
                                 <Package2 className="h-6 w-6" />
                                 <span className="sr-only">Acme Inc</span>
                             </Link>
                             {adminNav.map((nav) => {
                                 return (
-                                    <Link href={nav.href} className="hover:text-foreground" key={nav.name}>
+                                    <Link href={nav.href} className="hover:text-white text-slate-300" key={nav.name}>
                                         {nav.name}
                                     </Link>
                                 )
@@ -99,7 +99,7 @@ export default function UserAdminNavbar() {
                     </form>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" size="icon" className="rounded-full border border-foreground">
+                            <Button variant="secondary" size="icon" className="rounded-full border border-white/20 hover:bg-white/10 bg-white/5 transition-all">
                                 <Avatar>
                                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                     <AvatarFallback>CN</AvatarFallback>
@@ -113,7 +113,7 @@ export default function UserAdminNavbar() {
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator /> */}
                             <DropdownMenuItem>
-                                <button onClick={() => signOut()}>Logout</button>
+                                <button onClick={() => logout()}>Logout</button>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

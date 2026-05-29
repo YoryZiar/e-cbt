@@ -1,7 +1,6 @@
 'use server'
 
-import { signIn } from "@/auth";
-import { AuthError } from 'next-auth';
+import { signIn, auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export async function authenticate(
@@ -9,17 +8,18 @@ export async function authenticate(
     formData: FormData,
 ) {
     try {
-        const result = await signIn('credentials', formData);
-        return result
-    } catch (error) {
-        if (error instanceof AuthError) {
-            switch (error.type) {
-                case 'CredentialsSignin':
-                    return 'Email atau Password tidak tepat!';
-                default:
-                    return 'Something went wrong.';
-            }
+        await signIn('credentials', formData);
+    } catch (error: any) {
+        if (error.message === 'CredentialsSignin') {
+            return 'Email atau Password tidak tepat!';
         }
         throw error;
+    }
+
+    const session = await auth();
+    if (session?.user?.role === 'admin') {
+        redirect("/admin/dashboard");
+    } else {
+        redirect("/user/dashboard");
     }
 }

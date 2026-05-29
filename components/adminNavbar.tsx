@@ -1,19 +1,18 @@
 'use client'
 
-import { signOut } from "next-auth/react"
+import { logout } from "@/app/actions/auth/logout"
 import Link from "next/link"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import {
     Menu,
-    Package2,
+    LogOut,
+    ShieldAlert
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,9 +20,13 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export default function AdminNavbar() {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+    const pathname = usePathname();
 
     const adminNav = [
         {
@@ -44,92 +47,121 @@ export default function AdminNavbar() {
         }
     ]
 
+    useEffect(() => {
+        setShowMenu(false);
+    }, [pathname]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 20) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className="flex w-full flex-col">
-            <header className="sticky top-0 flex h-16 items-center gap-4 bg-secondary px-4 md:px-6">
-                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-                    <Link
-                        href="#"
-                        className="flex items-center gap-2 text-lg font-semibold md:text-base"
-                    >
-                        <Package2 className="h-6 w-6" />
-                        <span className="sr-only">Acme Inc</span>
-                    </Link>
-                    {adminNav.map((nav) => {
-                        return (
-                            <Link
-                                href={nav.href}
-                                className="text-foreground transition-colors hover:text-foreground"
-                                key={nav.name}
-                            >
-                                {nav.name}
-                            </Link>
-                        )
-                    })}
-                </nav>
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="shrink-0 md:hidden bg-primary"
+        <div className={`fixed top-4 left-0 right-0 z-50 flex justify-center px-4 transition-all duration-300 ${isScrolled ? 'top-4' : 'top-6'}`}>
+            <div className={`w-full max-w-6xl rounded-full transition-all duration-500 border
+                ${isScrolled 
+                    ? 'bg-[#13072e]/80 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.3)] border-white/10 py-3' 
+                    : 'bg-white/[0.05] backdrop-blur-md shadow-2xl border-white/5 py-4'
+                } px-6 flex items-center justify-between relative`}>
+                
+                {/* Logo / Brand */}
+                <Link href="/admin/dashboard" className="flex-shrink-0 z-10 flex items-center gap-2 hover:scale-105 transition-transform">
+                    <ShieldAlert className="w-5 h-5 text-secondary" />
+                    <h1 className="bg-gradient-to-r from-secondary to-[#d3ccff] bg-clip-text text-transparent font-bold tracking-wide">
+                        E-CBT Admin
+                    </h1>
+                </Link>
+
+                {/* Desktop Menu */}
+                <nav className="hidden md:flex items-center space-x-1 lg:space-x-4">
+                    {adminNav.map((link) => (
+                        <Link 
+                            key={link.name} 
+                            href={link.href} 
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                                pathname === link.href 
+                                ? "bg-secondary text-primary font-semibold shadow-[0_0_15px_rgba(179,170,255,0.3)]" 
+                                : "text-slate-300 hover:text-white hover:bg-white/5"
+                            }`}
                         >
-                            <Menu className="h-5 w-5 text-slate-200" />
-                            <span className="sr-only">Toggle navigation menu</span>
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left">
-                        <nav className="grid gap-6 text-lg font-medium">
-                            <Link
-                                href="#"
-                                className="flex items-center gap-2 text-lg font-semibold"
-                            >
-                                <Package2 className="h-6 w-6" />
-                                <span className="sr-only">Acme Inc</span>
-                            </Link>
-                            {adminNav.map((nav) => {
-                                return (
-                                    <Link href={nav.href} className="hover:text-foreground" key={nav.name}>
-                                        {nav.name}
-                                    </Link>
-                                )
-                            })}
-                        </nav>
-                    </SheetContent>
-                </Sheet>
-                <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-                    <form className="ml-auto flex-1 sm:flex-initial">
-                        {/* <div className="relative">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder="Search products..."
-                                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                            />
-                        </div> */}
-                    </form>
+                            {link.name}
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* Desktop Action / Profile */}
+                <div className="hidden md:flex items-center gap-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" size="icon" className="rounded-full border border-foreground">
-                                <Avatar>
-                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                    <AvatarFallback>CN</AvatarFallback>
+                            <Button variant="ghost" size="icon" className="rounded-full h-10 w-10 border border-white/10 hover:bg-white/10 focus-visible:ring-0">
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage src="https://github.com/shadcn.png" alt="@admin" />
+                                    <AvatarFallback className="bg-primary text-secondary">AD</AvatarFallback>
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
-                            <DropdownMenuSeparator /> */}
-                            <DropdownMenuItem>
-                                <button onClick={() => signOut()}>Logout</button>
+                        <DropdownMenuContent align="end" className="w-48 bg-[#13072e]/90 backdrop-blur-xl border-white/10 text-white rounded-2xl shadow-xl">
+                            <DropdownMenuItem className="hover:bg-white/10 focus:bg-white/10 cursor-pointer rounded-xl" onClick={() => logout()}>
+                                <LogOut className="mr-2 h-4 w-4 text-red-400" />
+                                <span className="text-red-400">Logout</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-            </header>
+
+                {/* Mobile Menu Toggle */}
+                <div className="md:hidden flex items-center gap-2 z-10">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 border border-white/10 hover:bg-white/10">
+                                <Avatar className="h-6 w-6">
+                                    <AvatarFallback className="bg-primary text-secondary text-xs">AD</AvatarFallback>
+                                </Avatar>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-[#13072e]/90 backdrop-blur-xl border-white/10 text-white rounded-2xl shadow-xl">
+                            <DropdownMenuItem className="hover:bg-white/10 focus:bg-white/10 cursor-pointer rounded-xl" onClick={() => logout()}>
+                                <LogOut className="mr-2 h-4 w-4 text-red-400" />
+                                <span className="text-red-400">Logout</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Sheet open={showMenu} onOpenChange={setShowMenu}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full">
+                                <Menu className="w-6 h-6" />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="bg-[#13072e]/95 backdrop-blur-2xl border-r border-white/10 w-full sm:max-w-sm pt-20">
+                            <SheetTitle className="sr-only">Menu Admin</SheetTitle>
+                            <div className="flex flex-col space-y-6 mt-8">
+                                {adminNav.map((link) => (
+                                    <Link 
+                                        key={link.name} 
+                                        href={link.href}
+                                        className={`text-xl font-semibold tracking-wide flex items-center transition-all ${
+                                            pathname === link.href 
+                                            ? "text-secondary pl-4 border-l-4 border-secondary" 
+                                            : "text-slate-300 hover:text-white"
+                                        }`}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
+            </div>
         </div>
     )
 }

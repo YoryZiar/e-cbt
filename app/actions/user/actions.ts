@@ -1,31 +1,13 @@
 'use server'
 
 import { auth } from "@/auth"
-import prisma from "@/lib/db"
+import { createAdminClient, createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server"
+import { ID, AppwriteException } from "node-appwrite"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { RegisterSchema } from "@/app/types/validations/register"
-import { JurnalSchema } from "@/app/types/validations/jurnal"
-import { CommentSchema } from "@/app/types/validations/comment"
 
 // register
-// export async function register(formData: FormData) {
-//     try {
-//         const userRegister = await prisma.user.create({
-//             data: {
-//                 name: formData.get('name') as string,
-//                 email: formData.get('email') as string,
-//                 password: formData.get('password') as string
-//             }
-//         })
-//     } catch (error) {
-//         console.log("Error registering user: " + error);
-//         throw new Error("Error register")
-//     }
-
-//     revalidatePath("/login")
-// }
-
 export async function register(formData: FormData) {
     const result = RegisterSchema.safeParse(Object.fromEntries(formData));
 
@@ -35,29 +17,36 @@ export async function register(formData: FormData) {
         }
     }
 
-    const response = await prisma.user.create({
-        data: {
-            name: formData.get('name') as string,
-            email: formData.get('email') as string,
-            password: formData.get('password') as string
-        }
-    }).then((result) => {
-        return result
-    }).catch((err) => {
-        console.log("Error register user: " + err);
-        // let {status} = err?.response;
+    try {
+        const { account, databases, users } = await createAdminClient();
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
 
-        if (err?.response?.data?.errors && !err?.response?.data?.errors?.detail) {
+        // Create user in Appwrite Auth via Admin API
+        const user = await users.create(ID.unique(), email, undefined, password, name);
+
+        // Assign 'user' label
+        await users.updateLabels(user.$id, ['user']);
+
+        // Create profile document
+        await databases.createDocument(DATABASE_ID, COLLECTIONS.PROFILES, ID.unique(), {
+            userId: user.$id,
+            name: name,
+            email: email,
+        });
+
+        revalidatePath("/login");
+        return { success: true };
+    } catch (err) {
+        console.log("Error register user: ", err);
+        if (err instanceof AppwriteException) {
             return {
-                errors: err?.response?.data?.errors
+                errors: [err.message]
             }
-        } else {
-            throw new Error("Error ketika melakukan register")
         }
-    });
-
-    revalidatePath("/login");
-    return response
+        throw new Error("Error ketika melakukan register")
+    }
 }
 
 // create jurnal
@@ -66,22 +55,16 @@ export async function createJurnal(
 ) {
     try {
         const session = await auth()
-        const createTherapy = await prisma.jurnal.create({
-            data: {
-                title: formData.get('title') as string,
-                content: formData.get('content') as string,
-                User: {
-                    connect: {
-                        email: session?.user?.email as string
-                    }
-                }
-            },
-            include: {
-                User: true
-            }
-        })
+        if (!session?.user) throw new Error("Not authenticated");
+
+        const { databases } = await createSessionClient();
+        await databases.createDocument(DATABASE_ID, COLLECTIONS.JURNALS, ID.unique(), {
+            title: formData.get('title') as string,
+            content: formData.get('content') as string,
+            userId: session.user.id
+        });
     } catch (error) {
-        console.log("Error create Therapy: " + error);
+        console.log("Error create Therapy: ", error);
         throw new Error("Failed to create Therapy")
     }
 
@@ -92,27 +75,16 @@ export async function createJurnal(
 export async function createComment(formData: FormData) {
     try {
         const session = await auth()
-        const createComment = await prisma.comment.create({
-            data: {
-                Jurnal: {
-                    connect: {
-                        id: formData.get("jurnalId") as string,
-                    }
-                },
-                User: {
-                    connect: {
-                        email: session?.user?.email as string,
-                    }
-                },
-                content: formData.get("message") as string,
-            },
-            include: {
-                User: true,
-                Jurnal: true
-            }
-        })
+        if (!session?.user) throw new Error("Not authenticated");
+
+        const { databases } = await createSessionClient();
+        await databases.createDocument(DATABASE_ID, COLLECTIONS.COMMENTS, ID.unique(), {
+            jurnalId: formData.get("jurnalId") as string,
+            userId: session.user.id,
+            content: formData.get("message") as string,
+        });
     } catch (error) {
-        console.log("Error create Comment: " + error);
+        console.log("Error create Comment: ", error);
         throw new Error("Failed to create Comment")
     }
 
@@ -122,16 +94,12 @@ export async function createComment(formData: FormData) {
 // delete jurnal
 export async function destroyJurnal(jurnalId: string) {
     try {
-        const jurnalById = await prisma.jurnal.delete({
-            where: {
-                id: jurnalId.toString()
-            }
-        });
-
+        const { databases } = await createAdminClient(); // or session client if they own it
+        await databases.deleteDocument(DATABASE_ID, COLLECTIONS.JURNALS, jurnalId);
         revalidatePath("/user/jurnal")
-        return jurnalById
+        return { success: true }
     } catch (error) {
-        console.log("database error: " + error);
+        console.log("database error: ", error);
         throw new Error("Failed to delete jurnal")
     }
 }
@@ -139,15 +107,11 @@ export async function destroyJurnal(jurnalId: string) {
 // delete message
 export async function destroyMessage(messageId: string) {
     try {
-        const messageById = await prisma.message.delete({
-            where: {
-                id: messageId
-            }
-        });
-
-        return messageById;
+        const { databases } = await createAdminClient();
+        await databases.deleteDocument(DATABASE_ID, COLLECTIONS.MESSAGES, messageId);
+        return { success: true };
     } catch (error) {
-        console.log("database error: " + error);
+        console.log("database error: ", error);
         throw new Error("Failed to delete message")
     }
 }

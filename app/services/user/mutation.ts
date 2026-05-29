@@ -41,23 +41,14 @@ export const useRegisterUser = async () => {
         },
         onSuccess: async (res) => {
             Swal.close()
-            // if (res) {
-            //     if (res) {
-            //         Swal.fire({
-            //             title: 'Gagal',
-            //             text: 'Pastikan data yang diinputkan telah sesuai',
-            //             icon: 'error'
-            //         })
-            //     } else {
-            //         Swal.fire({
-            //             title: 'Gagal',
-            //             text: 'Pastikan data yang diinputkan telah sesuai',
-            //             icon: 'error'
-            //         })
-            //     }
-
-            //     return res;
-            // }
+            if (res?.error || res?.errors) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: res.errors ? res.errors[0] : 'Pastikan data yang diinputkan telah sesuai',
+                    icon: 'error'
+                })
+                return res;
+            }
             Swal.fire({
                 title: "Register berhasil",
                 text: "Berhasil melakukan registrasi!",

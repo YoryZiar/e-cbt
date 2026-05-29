@@ -1,7 +1,6 @@
 'use client'
 
-import { useFormState } from "react-dom";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { authenticate } from "@/app/actions/auth/actions";
 import { register } from "@/app/actions/user/actions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,7 +18,7 @@ export default function Login() {
     const registerUserMutation = useRegisterUser();
 
     // login action
-    const [errorMessage, formAction, isPending] = useFormState(
+    const [errorMessage, formAction, isPending] = useActionState(
         authenticate,
         undefined,
     );
@@ -59,65 +58,111 @@ export default function Login() {
     }
 
     return (
-        <div className="container mx-auto my-10 bg-primary rounded-lg py-3 lg:w-3/6">
-            <Tabs defaultValue="register" className="w-4/6 mx-auto">
-                <TabsList className="grid w-full grid-cols-2 bg-secondary">
-                    <TabsTrigger className="active:bg-primary" value="login">Login</TabsTrigger>
-                    <TabsTrigger value="register">Register</TabsTrigger>
-                </TabsList>
-                <TabsContent value="login">
-                    <form action={formAction}>
-                        <label htmlFor="email" className="block">
-                            <span className="block text-slate-200 py-2">Email</span>
-                            <Input name="email" id="email" type="email" className="p-3 bg-slate-200" />
-                        </label>
-                        <label htmlFor="password" className="block">
-                            <span className="block text-slate-200 py-2">Password</span>
-                            <Input name="password" id="password" type="password" className="p-3 bg-slate-200" />
-                        </label>
-                        <div className="block text-center">
-                            <Button className="bg-secondary hover:bg-violet-600 text-primary text-lg my-5">Login</Button>
-                        </div>
-                    </form>
-                </TabsContent>
-                <TabsContent value="register">
-                    <form onSubmit={handleRegisterSubmitForm}>
-                        <label htmlFor="name" className="block">
-                            <span className="block text-slate-200 py-2">Nama</span>
-                            <Input
-                            name="name"
-                            id="name"
-                            type="text"
-                            value={registerFormData.name}
-                            onChange={handleFormRegisterChange}
-                            className="p-3 bg-slate-200" />
-                        </label>
-                        <label htmlFor="email" className="block">
-                            <span className="block text-slate-200 py-2">Email</span>
-                            <Input
-                            name="email"
-                            id="email"
-                            type="email"
-                            value={registerFormData.email}
-                            onChange={handleFormRegisterChange}
-                            className="p-3 bg-slate-200" />
-                        </label>
-                        <label htmlFor="password" className="block">
-                            <span className="block text-slate-200 py-2">Password</span>
-                            <Input
-                            name="password"
-                            id="password"
-                            type="password"
-                            value={registerFormData.password}
-                            onChange={handleFormRegisterChange}
-                            className="p-3 bg-slate-200" />
-                        </label>
-                        <div className="block text-center">
-                            <Button type="submit" className="bg-secondary hover:bg-violet-600 text-primary text-lg my-5">Register</Button>
-                        </div>
-                    </form>
-                </TabsContent>
-            </Tabs>
+        <div className="min-h-screen py-24 relative overflow-hidden flex items-center justify-center">
+            {/* Background effects */}
+            <div className="absolute top-0 right-1/4 w-72 h-72 bg-primary/30 rounded-full mix-blend-screen filter blur-[100px] opacity-70 pointer-events-none"></div>
+
+            <div className="container mx-auto px-4 relative z-10 w-full max-w-md">
+                <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl p-8 lg:p-10">
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-white mb-2">Selamat Datang</h1>
+                        <p className="text-slate-400 text-sm">Masuk atau buat akun untuk melanjutkan</p>
+                    </div>
+
+                    <Tabs defaultValue="login" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 rounded-xl mb-8 p-1">
+                            <TabsTrigger 
+                                value="login" 
+                                className="rounded-lg data-[state=active]:bg-secondary data-[state=active]:text-primary text-slate-400 transition-all"
+                            >
+                                Login
+                            </TabsTrigger>
+                            <TabsTrigger 
+                                value="register" 
+                                className="rounded-lg data-[state=active]:bg-secondary data-[state=active]:text-primary text-slate-400 transition-all"
+                            >
+                                Register
+                            </TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="login" className="animate-in fade-in zoom-in-95 duration-300">
+                            <form action={formAction} className="space-y-5">
+                                <label htmlFor="email" className="block">
+                                    <span className="block text-slate-300 text-sm mb-2 font-medium">Alamat Email</span>
+                                    <Input 
+                                        name="email" 
+                                        id="email" 
+                                        type="email" 
+                                        className="w-full bg-white/5 border-white/10 text-white placeholder-slate-500 rounded-xl h-12 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all" 
+                                        placeholder="nama@email.com"
+                                    />
+                                </label>
+                                <label htmlFor="password" className="block">
+                                    <span className="block text-slate-300 text-sm mb-2 font-medium">Password</span>
+                                    <Input 
+                                        name="password" 
+                                        id="password" 
+                                        type="password" 
+                                        className="w-full bg-white/5 border-white/10 text-white placeholder-slate-500 rounded-xl h-12 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all" 
+                                        placeholder="••••••••"
+                                    />
+                                </label>
+                                <div className="pt-4">
+                                    <Button className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)]">
+                                        Login
+                                    </Button>
+                                </div>
+                            </form>
+                        </TabsContent>
+                        
+                        <TabsContent value="register" className="animate-in fade-in zoom-in-95 duration-300">
+                            <form onSubmit={handleRegisterSubmitForm} className="space-y-5">
+                                <label htmlFor="name" className="block">
+                                    <span className="block text-slate-300 text-sm mb-2 font-medium">Nama Lengkap</span>
+                                    <Input
+                                        name="name"
+                                        id="name"
+                                        type="text"
+                                        value={registerFormData.name}
+                                        onChange={handleFormRegisterChange}
+                                        className="w-full bg-white/5 border-white/10 text-white placeholder-slate-500 rounded-xl h-12 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                                        placeholder="Nama Lengkap" 
+                                    />
+                                </label>
+                                <label htmlFor="email" className="block">
+                                    <span className="block text-slate-300 text-sm mb-2 font-medium">Alamat Email</span>
+                                    <Input
+                                        name="email"
+                                        id="email"
+                                        type="email"
+                                        value={registerFormData.email}
+                                        onChange={handleFormRegisterChange}
+                                        className="w-full bg-white/5 border-white/10 text-white placeholder-slate-500 rounded-xl h-12 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                                        placeholder="nama@email.com" 
+                                    />
+                                </label>
+                                <label htmlFor="password" className="block">
+                                    <span className="block text-slate-300 text-sm mb-2 font-medium">Password</span>
+                                    <Input
+                                        name="password"
+                                        id="password"
+                                        type="password"
+                                        value={registerFormData.password}
+                                        onChange={handleFormRegisterChange}
+                                        className="w-full bg-white/5 border-white/10 text-white placeholder-slate-500 rounded-xl h-12 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                                        placeholder="••••••••" 
+                                    />
+                                </label>
+                                <div className="pt-4">
+                                    <Button type="submit" className="w-full h-12 bg-secondary hover:bg-[#c4bdff] text-primary font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(179,170,255,0.3)]">
+                                        Register
+                                    </Button>
+                                </div>
+                            </form>
+                        </TabsContent>
+                    </Tabs>
+                </div>
+            </div>
         </div>
     )
 }

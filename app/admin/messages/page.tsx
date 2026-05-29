@@ -17,30 +17,32 @@ export default async function Messages() {
     const listMessages = await getMessage(0, 100);
 
     return (
-        <div className="container mx-auto my-5 p-2 w-full lg:w-3/5">
-            <Card x-chunk="dashboard-01-chunk-5" className="bg-secondary border-0 shadow-lg shadow-primary">
-                <CardHeader className="flex flex-row items-center">
-                    <CardTitle>Pesan Terbaru</CardTitle>
+        <div className="container mx-auto my-5 p-4 w-full lg:w-3/5">
+            <Card className="bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2.5rem] overflow-hidden">
+                <CardHeader className="flex flex-row items-center border-b border-white/5 bg-white/5 px-6 py-6">
+                    <CardTitle className="text-xl text-white">Daftar Pesan</CardTitle>
                 </CardHeader>
-                {
-                    listMessages.length
-                    ?
-                    <CardContent className="grid gap-8">
-                    {listMessages.map((message, index) => {
-                        return (
-                            <MessagesItem
-                            key={message.id}
-                            message={message}
-                            index={index + 1}
-                            />
-                        )
-                    })}
+                <CardContent className="p-6">
+                    {
+                        listMessages.length
+                        ?
+                        <div className="grid gap-6">
+                            {listMessages.map((message, index) => {
+                                return (
+                                    <MessagesItem
+                                        key={message.id}
+                                        message={message}
+                                        index={index + 1}
+                                    />
+                                )
+                            })}
+                        </div>
+                        :
+                        <div className="h-32 flex items-center justify-center">
+                            <h1 className="text-center text-slate-400 italic">Pesan Kosong!</h1>
+                        </div>
+                    }
                 </CardContent>
-                :
-                <CardContent className="grid gap-8">
-                    <h1 className="text-center">Pesan Kosong!</h1>
-                </CardContent>
-                }
             </Card>
         </div>
     )
