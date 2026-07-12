@@ -27,10 +27,20 @@ export async function auth() {
     }
 }
 
+import { signInSchema } from "@/lib/zod"
+
 export async function signIn(provider: string, formData: FormData) {
     if (provider === "credentials") {
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
+        const rawData = Object.fromEntries(formData.entries());
+        const validated = signInSchema.safeParse(rawData);
+
+        if (!validated.success) {
+            console.error("Sign in validation error:", validated.error.format());
+            throw new Error("CredentialsSignin");
+        }
+
+        const email = validated.data.email;
+        const password = validated.data.password;
 
         const { account } = await createAdminClient();
         try {
