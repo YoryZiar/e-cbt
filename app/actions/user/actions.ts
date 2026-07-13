@@ -1,11 +1,14 @@
 'use server'
 
 import { auth } from "@/auth"
-import { createAdminClient, createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server"
-import { ID, AppwriteException } from "node-appwrite"
+import { db } from "@/lib/db"
+import { jurnals, comments, messages, profiles } from "@/lib/db/schema"
+import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { RegisterSchema } from "@/app/types/validations/register"
+import bcrypt from "bcryptjs"
+import { v4 as uuidv4 } from "uuid"
 
 // register
 export async function register(formData: FormData) {
@@ -18,34 +21,30 @@ export async function register(formData: FormData) {
     }
 
     try {
-        const { account, databases, users } = await createAdminClient();
         const name = formData.get('name') as string;
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
-        // Create user in Appwrite Auth via Admin API
-        const user = await users.create(ID.unique(), email, undefined, password, name);
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const userId = uuidv4();
 
-        // Assign 'user' label
-        await users.updateLabels(user.$id, ['user']);
-
-        // Create profile document
-        await databases.createDocument(DATABASE_ID, COLLECTIONS.PROFILES, ID.unique(), {
-            userId: user.$id,
+        // Create profile document in Neon DB
+        await db.insert(profiles).values({
+            userId: userId,
             name: name,
             email: email,
+            password: hashedPassword,
+            role: 1 // default role: 1 = user
         });
 
         revalidatePath("/login");
         return { success: true };
-    } catch (err) {
+    } catch (err: any) {
         console.log("Error register user: ", err);
-        if (err instanceof AppwriteException) {
-            return {
-                errors: [err.message]
-            }
+        return {
+            errors: [err.message || "Error ketika melakukan register"]
         }
-        throw new Error("Error ketika melakukan register")
     }
 }
 
@@ -57,8 +56,7 @@ export async function createJurnal(
         const session = await auth()
         if (!session?.user) throw new Error("Not authenticated");
 
-        const { databases } = await createSessionClient();
-        await databases.createDocument(DATABASE_ID, COLLECTIONS.JURNALS, ID.unique(), {
+        await db.insert(jurnals).values({
             title: formData.get('title') as string,
             content: formData.get('content') as string,
             userId: session.user.id
@@ -77,8 +75,7 @@ export async function createComment(formData: FormData) {
         const session = await auth()
         if (!session?.user) throw new Error("Not authenticated");
 
-        const { databases } = await createSessionClient();
-        await databases.createDocument(DATABASE_ID, COLLECTIONS.COMMENTS, ID.unique(), {
+        await db.insert(comments).values({
             jurnalId: formData.get("jurnalId") as string,
             userId: session.user.id,
             content: formData.get("message") as string,
@@ -89,13 +86,13 @@ export async function createComment(formData: FormData) {
     }
 
     revalidatePath(`/user/jurnal/${formData.get("jurnalId")}`)
+    revalidatePath(`/admin/jurnal/${formData.get("jurnalId")}`)
 }
 
 // delete jurnal
 export async function destroyJurnal(jurnalId: string) {
     try {
-        const { databases } = await createAdminClient(); // or session client if they own it
-        await databases.deleteDocument(DATABASE_ID, COLLECTIONS.JURNALS, jurnalId);
+        await db.delete(jurnals).where(eq(jurnals.id, jurnalId));
         revalidatePath("/user/jurnal")
         return { success: true }
     } catch (error) {
@@ -107,8 +104,7 @@ export async function destroyJurnal(jurnalId: string) {
 // delete message
 export async function destroyMessage(messageId: string) {
     try {
-        const { databases } = await createAdminClient();
-        await databases.deleteDocument(DATABASE_ID, COLLECTIONS.MESSAGES, messageId);
+        await db.delete(messages).where(eq(messages.id, messageId));
         return { success: true };
     } catch (error) {
         console.log("database error: ", error);

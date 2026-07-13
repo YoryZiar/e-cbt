@@ -1,8 +1,8 @@
 'use server'
 
 import { auth } from "@/auth"
-import { createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server"
-import { ID, AppwriteException } from "node-appwrite"
+import { db } from "@/lib/db"
+import { jurnals } from "@/lib/db/schema"
 import { revalidatePath } from "next/cache"
 import { JurnalSchema } from "@/app/types/validations/jurnal"
 
@@ -20,28 +20,24 @@ export async function createJurnal(formData: FormData) {
         const session = await auth()
         if (!session?.user) throw new Error("Not authenticated");
 
-        const { databases } = await createSessionClient();
-        const resultJurnal = await databases.createDocument(DATABASE_ID, COLLECTIONS.JURNALS, ID.unique(), {
+        const [resultJurnal] = await db.insert(jurnals).values({
             title: formData.get('title') as string,
             content: formData.get('content') as string,
             userId: session.user.id
-        });
+        }).returning();
 
         revalidatePath("/start-therapy");
         return {
-            id: resultJurnal.$id,
+            id: resultJurnal.id,
             title: resultJurnal.title,
             content: resultJurnal.content,
             userId: resultJurnal.userId,
-            createdAt: resultJurnal.$createdAt
+            createdAt: resultJurnal.createdAt
         };
-    } catch (err) {
+    } catch (err: any) {
         console.log("Error ketika membuat jurnal: ", err);
-        if (err instanceof AppwriteException) {
-            return {
-                errors: [err.message]
-            }
+        return {
+            errors: [err.message || "Error membuat jurnal"]
         }
-        throw new Error("Error membuat jurnal")
     }
 }

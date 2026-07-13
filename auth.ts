@@ -1,33 +1,49 @@
-import { createAdminClient, createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Query } from "node-appwrite";
+import { db } from "@/lib/db";
+import { profiles } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcryptjs";
+import * as jose from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "super_secret_key_change_me_later_or_keep_it_secure_12345"
+);
 
 export async function auth() {
     try {
-        const { account } = await createSessionClient();
-        const user = await account.get();
+        const cookieStore = await cookies();
+        const token = cookieStore.get("appwrite-session")?.value;
+        if (!token) return null;
+
+        const { payload } = await jose.jwtVerify(token, JWT_SECRET);
+        const userId = payload.sub as string;
         
-        // Fetch labels via Admin SDK
-        const { users } = await createAdminClient();
-        const adminUser = await users.get(user.$id);
-        
-        const role = adminUser.labels.includes('admin') ? 'admin' : 'user';
-        
+        if (!userId) return null;
+
+        const userProfile = await db.query.profiles.findFirst({
+            where: eq(profiles.userId, userId),
+        });
+
+        if (!userProfile) return null;
+
+        const role = userProfile.role === 2 ? 'admin' : 'user';
+
         return {
             user: {
-                id: user.$id,
-                email: user.email,
-                name: user.name,
+                id: userProfile.userId,
+                email: userProfile.email,
+                name: userProfile.name,
                 role: role,
             }
         };
     } catch (error) {
+        console.error("Auth helper error:", error);
         return null;
     }
 }
 
-import { signInSchema } from "@/lib/zod"
+import { signInSchema } from "@/lib/zod";
 
 export async function signIn(provider: string, formData: FormData) {
     if (provider === "credentials") {
@@ -42,16 +58,37 @@ export async function signIn(provider: string, formData: FormData) {
         const email = validated.data.email;
         const password = validated.data.password;
 
-        const { account } = await createAdminClient();
         try {
-            const session = await account.createEmailPasswordSession(email, password);
+            const userProfile = await db.query.profiles.findFirst({
+                where: eq(profiles.email, email),
+            });
+
+            if (!userProfile) {
+                console.error("User not found for sign in");
+                throw new Error("CredentialsSignin");
+            }
+
+            const isPasswordCorrect = await bcrypt.compare(password, userProfile.password);
+            if (!isPasswordCorrect) {
+                console.error("Incorrect password");
+                throw new Error("CredentialsSignin");
+            }
+
+            // Create JWT Token
+            const token = await new jose.SignJWT({ email: userProfile.email, role: userProfile.role })
+                .setProtectedHeader({ alg: "HS256" })
+                .setSubject(userProfile.userId)
+                .setIssuedAt()
+                .setExpirationTime("7d")
+                .sign(JWT_SECRET);
+
             const cookieStore = await cookies();
-            cookieStore.set("appwrite-session", session.secret, {
+            cookieStore.set("appwrite-session", token, {
                 path: "/",
                 httpOnly: true,
                 sameSite: "lax",
                 secure: process.env.NODE_ENV === "production",
-                expires: new Date(session.expire),
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
             });
             return { success: true };
         } catch (error) {
@@ -62,12 +99,6 @@ export async function signIn(provider: string, formData: FormData) {
 }
 
 export async function signOut() {
-    try {
-        const { account } = await createSessionClient();
-        await account.deleteSession("current");
-    } catch (error) {
-        console.error("Sign out error:", error);
-    }
     const cookieStore = await cookies();
     cookieStore.delete("appwrite-session");
     redirect("/login");

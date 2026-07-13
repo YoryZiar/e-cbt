@@ -1,5 +1,6 @@
-import { createSessionClient, createAdminClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server";
-import { Query } from "node-appwrite";
+import { db } from "@/lib/db";
+import { profiles, jurnals, comments, messages } from "@/lib/db/schema";
+import { eq, desc, sql } from "drizzle-orm";
 
 // get user
 export async function getUser(
@@ -7,19 +8,19 @@ export async function getUser(
     data: number
 ) {
     try {
-        const { databases } = await createSessionClient();
-        const users = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.offset(page),
-            Query.limit(data),
-            Query.orderDesc("$createdAt")
-        ]);
+        const usersList = await db.query.profiles.findMany({
+            where: eq(profiles.role, 1),
+            orderBy: [desc(profiles.createdAt)],
+            limit: data,
+            offset: page
+        });
 
-        return users.documents.map(doc => ({
+        return usersList.map(doc => ({
             id: doc.userId,
             name: doc.name,
             email: doc.email,
             telephone: doc.telephone,
-            createdAt: new Date(doc.$createdAt)
+            createdAt: doc.createdAt
         }));
     } catch (error) {
         console.log("Database error: ", error);
@@ -30,20 +31,18 @@ export async function getUser(
 // get user by id
 export async function getUserById( id: string ) {
     try {
-        const { databases } = await createSessionClient();
-        const userById = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.equal("userId", id)
-        ]);
+        const doc = await db.query.profiles.findFirst({
+            where: eq(profiles.userId, id)
+        });
 
-        if (userById.documents.length === 0) return null;
+        if (!doc) return null;
 
-        const doc = userById.documents[0];
         return {
             id: doc.userId,
             name: doc.name,
             email: doc.email,
             telephone: doc.telephone,
-            createdAt: new Date(doc.$createdAt)
+            createdAt: doc.createdAt
         };
     } catch (error) {
         console.log("Database error: ", error);
@@ -51,171 +50,163 @@ export async function getUserById( id: string ) {
     }
 }
 
-// count user
+// count users
 export async function countUser() {
     try {
-        const { databases } = await createSessionClient();
-        const totalUser = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.limit(1)
-        ]);
+        const [countResult] = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(profiles)
+            .where(eq(profiles.role, 1));
 
-        return totalUser.total;
+        return countResult.count;
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to count user");
+        throw new Error("Failed to count users");
     }
 }
+export const countUsers = countUser;
 
-// get jurnal user
+// get jurnal list admin
 export async function getJurnal(
     page: number,
     data: number
 ) {
     try {
-        const { databases } = await createSessionClient();
-        const listJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.JURNALS, [
-            Query.offset(page),
-            Query.limit(data),
-            Query.orderDesc("$createdAt")
-        ]);
+        const jurnalsList = await db.query.jurnals.findMany({
+            orderBy: [desc(jurnals.createdAt)],
+            limit: data,
+            offset: page,
+            with: {
+              author: true
+            }
+        });
 
-        const userIds = [...new Set(listJurnal.documents.map(j => j.userId))];
-        const profiles = userIds.length > 0 ? await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.equal("userId", userIds)
-        ]) : { documents: [] };
-
-        const profileMap = profiles.documents.reduce((acc, profile) => {
-            acc[profile.userId] = profile;
-            return acc;
-        }, {} as any);
-
-        return listJurnal.documents.map(doc => ({
-            id: doc.$id,
+        return jurnalsList.map(doc => ({
+            id: doc.id,
             title: doc.title,
             content: doc.content,
-            createdAt: new Date(doc.$createdAt),
+            createdAt: doc.createdAt,
             userId: doc.userId,
-            User: profileMap[doc.userId] ? {
-                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
-                name: profileMap[doc.userId].name,
-                email: profileMap[doc.userId].email,
-                telephone: profileMap[doc.userId].telephone
-            } : { name: "Unknown User", email: "Unknown Email" }
+            User: {
+                id: doc.author.userId,
+                name: doc.author.name,
+                email: doc.author.email
+            }
         }));
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get jurnal")
+        throw new Error("Failed to get journals list for admin");
     }
 }
 
-// count jurnal
+// count all journals
 export async function countJurnal() {
     try {
-        const { databases } = await createSessionClient();
-        const listJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.JURNALS, [
-            Query.limit(1)
-        ]);
+        const [countResult] = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(jurnals);
 
-        return listJurnal.total;
+        return countResult.count;
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to count jurnal")
+        throw new Error("Failed to count all journals");
     }
 }
 
-// get jurnal by id
+// get detail jurnal for admin
 export async function getJurnalById(id: string) {
     try {
-        const { databases } = await createAdminClient();
-        const doc = await databases.getDocument(DATABASE_ID, COLLECTIONS.JURNALS, id);
+        const doc = await db.query.jurnals.findFirst({
+            where: eq(jurnals.id, id),
+            with: {
+              author: true
+            }
+        });
+
+        if (!doc) return null;
+
         return {
-            id: doc.$id,
+            id: doc.id,
             title: doc.title,
             content: doc.content,
-            createdAt: new Date(doc.$createdAt),
-            userId: doc.userId
+            createdAt: doc.createdAt,
+            userId: doc.userId,
+            User: {
+                id: doc.author.userId,
+                name: doc.author.name,
+                email: doc.author.email
+            }
         };
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get jurnal")
+        throw new Error("Failed to get jurnal detail for admin");
     }
 }
 
-// get message
+// get list messages
 export async function getMessage(
     page: number,
     data: number
 ) {
     try {
-        const { databases } = await createSessionClient();
-        const listMessage = await databases.listDocuments(DATABASE_ID, COLLECTIONS.MESSAGES, [
-            Query.offset(page),
-            Query.limit(data),
-            Query.orderDesc("$createdAt")
-        ]);
+        const messagesList = await db.query.messages.findMany({
+            orderBy: [desc(messages.createdAt)],
+            limit: data,
+            offset: page
+        });
 
-        return listMessage.documents.map(doc => ({
-            id: doc.$id,
+        return messagesList.map(doc => ({
+            id: doc.id,
             title: doc.title,
             email: doc.email,
             message: doc.message,
-            createdAt: new Date(doc.$createdAt)
+            createdAt: doc.createdAt
         }));
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get message")
+        throw new Error("Failed to get messages");
     }
 }
 
-// count message
+// count messages
 export async function countMessage() {
     try {
-        const { databases } = await createSessionClient();
-        const totalMessage = await databases.listDocuments(DATABASE_ID, COLLECTIONS.MESSAGES, [
-            Query.limit(1)
-        ]);
+        const [countResult] = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(messages);
 
-        return totalMessage.total;
+        return countResult.count;
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to count message")
+        throw new Error("Failed to count messages");
     }
 }
 
-// get comment
+// get comments by jurnal for admin
 export async function getCommentByJurnal(id: string) {
     try {
-        const { databases } = await createAdminClient();
-        const commentByJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.COMMENTS, [
-            Query.equal("jurnalId", id),
-            Query.orderAsc("$createdAt")
-        ]);
+        const commentsList = await db.query.comments.findMany({
+            where: eq(comments.jurnalId, id),
+            orderBy: [desc(comments.createdAt)],
+            with: {
+              author: true
+            }
+        });
 
-        const userIds = [...new Set(commentByJurnal.documents.map(c => c.userId))];
-        const profiles = userIds.length > 0 ? await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.equal("userId", userIds)
-        ]) : { documents: [] };
-
-        const profileMap = profiles.documents.reduce((acc, profile) => {
-            acc[profile.userId] = profile;
-            return acc;
-        }, {} as any);
-
-        return commentByJurnal.documents.map(doc => ({
-            id: doc.$id,
+        return commentsList.map(doc => ({
+            id: doc.id,
+            content: doc.content,
+            createdAt: doc.createdAt,
             jurnalId: doc.jurnalId,
             userId: doc.userId,
-            content: doc.content,
-            createdAt: new Date(doc.$createdAt),
-            User: profileMap[doc.userId] ? {
-                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
-                name: profileMap[doc.userId].name,
-                email: profileMap[doc.userId].email,
-                telephone: profileMap[doc.userId].telephone
-            } : { name: "Unknown User", email: "Unknown Email" }
+            User: {
+                id: doc.author.userId,
+                name: doc.author.name,
+                email: doc.author.email
+            }
         }));
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get comment")
+        throw new Error("Failed to get comment list for admin");
     }
 }

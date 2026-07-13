@@ -1,5 +1,6 @@
-import { createSessionClient, DATABASE_ID, COLLECTIONS } from "@/lib/appwrite.server";
-import { Query } from "node-appwrite";
+import { db } from "@/lib/db";
+import { jurnals, comments, profiles } from "@/lib/db/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 
 // get jurnal user
@@ -11,20 +12,22 @@ export async function getJurnal(
         const session = await auth();
         if (!session?.user) throw new Error("Not authenticated");
 
-        const { databases } = await createSessionClient();
-        const listJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.JURNALS, [
-            Query.equal("userId", session.user.id),
-            Query.offset(page),
-            Query.limit(data),
-            Query.orderDesc("$createdAt")
-        ]);
+        // list jurnal dengan pagination
+        const listJurnal = await db.query.jurnals.findMany({
+            where: eq(jurnals.userId, session.user.id),
+            orderBy: [desc(jurnals.createdAt)],
+            limit: data,
+            offset: page,
+            with: {
+              author: true
+            }
+        });
 
-        // Map to expected Prisma format
-        return listJurnal.documents.map(doc => ({
-            id: doc.$id,
+        return listJurnal.map(doc => ({
+            id: doc.id,
             title: doc.title,
             content: doc.content,
-            createdAt: new Date(doc.$createdAt),
+            createdAt: doc.createdAt,
             userId: doc.userId,
             User: {
                 id: session.user.id,
@@ -44,72 +47,73 @@ export async function countJurnal() {
         const session = await auth();
         if (!session?.user) throw new Error("Not authenticated");
 
-        const { databases } = await createSessionClient();
-        const listJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.JURNALS, [
-            Query.equal("userId", session.user.id),
-            Query.limit(1)
-        ]);
+        const [countResult] = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(jurnals)
+            .where(eq(jurnals.userId, session.user.id));
 
-        return listJurnal.total;
+        return countResult.count;
     } catch (error) {
         console.log("Database error: ", error);
         throw new Error("Failed to count jurnal")
     }
 }
 
-// get jurnal by id
+// get jurnal detail
 export async function getJurnalById(id: string) {
     try {
-        const { databases } = await createSessionClient();
-        const doc = await databases.getDocument(DATABASE_ID, COLLECTIONS.JURNALS, id);
-        
+        const doc = await db.query.jurnals.findFirst({
+            where: eq(jurnals.id, id),
+            with: {
+              author: true
+            }
+        });
+
+        if (!doc) return null;
+
         return {
-            id: doc.$id,
+            id: doc.id,
             title: doc.title,
             content: doc.content,
-            createdAt: new Date(doc.$createdAt),
-            userId: doc.userId
+            createdAt: doc.createdAt,
+            userId: doc.userId,
+            User: {
+                id: doc.author.userId,
+                name: doc.author.name,
+                email: doc.author.email
+            }
         };
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get jurnal")
+        throw new Error("Failed to get jurnal detail")
     }
 }
 
-// get comment
+// get comment jurnal
 export async function getCommentByJurnal(id: string) {
     try {
-        const { databases } = await createSessionClient();
-        const commentByJurnal = await databases.listDocuments(DATABASE_ID, COLLECTIONS.COMMENTS, [
-            Query.equal("jurnalId", id),
-            Query.orderAsc("$createdAt")
-        ]);
+        const commentList = await db.query.comments.findMany({
+            where: eq(comments.jurnalId, id),
+            orderBy: [desc(comments.createdAt)],
+            with: {
+              author: true
+            }
+        });
 
-        const userIds = [...new Set(commentByJurnal.documents.map(c => c.userId))];
-        const profiles = userIds.length > 0 ? await databases.listDocuments(DATABASE_ID, COLLECTIONS.PROFILES, [
-            Query.equal("userId", userIds)
-        ]) : { documents: [] };
-
-        const profileMap = profiles.documents.reduce((acc, profile) => {
-            acc[profile.userId] = profile;
-            return acc;
-        }, {} as any);
-
-        return commentByJurnal.documents.map(doc => ({
-            id: doc.$id,
+        return commentList.map(doc => ({
+            id: doc.id,
+            content: doc.content,
+            createdAt: doc.createdAt,
             jurnalId: doc.jurnalId,
             userId: doc.userId,
-            content: doc.content,
-            createdAt: new Date(doc.$createdAt),
-            User: profileMap[doc.userId] ? {
-                id: profileMap[doc.userId].$id || profileMap[doc.userId].userId,
-                name: profileMap[doc.userId].name,
-                email: profileMap[doc.userId].email,
-                telephone: profileMap[doc.userId].telephone
-            } : { name: "Unknown User", email: "Unknown Email" }
+            User: {
+                id: doc.author.userId,
+                name: doc.author.name,
+                email: doc.author.email
+            }
         }));
     } catch (error) {
         console.log("Database error: ", error);
-        throw new Error("Failed to get comment")
+        throw new Error("Failed to get comment jurnal")
     }
 }
