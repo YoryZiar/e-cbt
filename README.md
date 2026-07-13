@@ -1,33 +1,43 @@
-# 🌟 E-CBT (Electronic Cognitive Behavioral Therapy) Platform
+# 🧠 E-CBT — Platform Terapi Perilaku Kognitif Elektronik
 
-Platform terapi perilaku kognitif elektronik (e-CBT) yang dirancang dengan desain modern, bersih, dan estetik bertemakan *dark-mode glassmorphism*. Aplikasi ini dibangun menggunakan **Next.js 16** dan terintegrasi dengan **Appwrite** sebagai Backend-as-a-Service (BaaS) untuk pengelolaan autentikasi, database, dan hak akses pengguna.
-
----
-
-## 🚀 Fitur Utama
-
-- **Aesthetic Glassmorphism UI**: Antarmuka premium dengan efek blur transparan yang dinamis, palet warna gelap yang harmonis, dan mikro-animasi interaktif untuk kenyamanan maksimal pengguna.
-- **Role-Based Access Control (RBAC)**: Pembagian hak akses yang aman antara **Admin** (menggunakan label `admin` di Appwrite) dan **User** biasa.
-- **Dashboard Admin**: Panel pengelolaan terpusat untuk memantau aktivitas jurnal pengguna, pesan masuk, dan statistik platform secara *real-time*.
-- **Dashboard User**: Panel personal bagi pengguna untuk menulis jurnal terapi, membaca feedback, dan mengelola profil pribadi dengan aman.
-- **CBT Journaling & Comments**: Pengguna dapat menulis jurnal harian CBT mereka, dan admin dapat memberikan interaksi atau komentar untuk membantu proses terapi.
-- **Direct Messaging System**: Layanan pesan instan bagi pengguna untuk menghubungi admin platform jika memerlukan bantuan tambahan.
+Platform **Electronic Cognitive Behavioral Therapy (e-CBT)** dengan desain *dark-mode glassmorphism* modern. Dibangun menggunakan **Next.js 16**, **Neon PostgreSQL**, dan **Drizzle ORM** — hasil migrasi penuh dari Appwrite ke stack database relasional mandiri.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## ✨ Fitur Utama
 
-- **Frontend Framework**: [Next.js 16](https://nextjs.org/) (App Router, React 19)
-- **Styling**: [TailwindCSS v4](https://tailwindcss.com/) & Vanilla CSS
-- **Backend-as-a-Service**: [Appwrite](https://appwrite.io/) (Auth & Database)
-- **UI Components & Icons**: [Ant Design](https://ant.design/) & [Lucide React](https://lucide.dev/)
-- **Alerts**: [SweetAlert2](https://sweetalert2.github.io/) dengan integrasi React
+- **Glassmorphism UI** — Antarmuka premium dengan efek blur transparan, palet gelap harmonis, dan mikro-animasi interaktif
+- **Role-Based Access Control (RBAC)** — Pembagian hak akses antara **Admin** (role `2`) dan **User** (role `1`) via JWT session
+- **Dashboard Admin** — Panel pengelolaan jurnal, pesan masuk, dan komentar pengguna
+- **Dashboard User** — Panel personal untuk menulis jurnal CBT harian, melihat feedback, dan mengelola profil
+- **CBT Journaling & Comments** — Pengguna menulis jurnal; admin dapat berkomentar untuk mendukung proses terapi
+- **Direct Messaging** — Pengguna dapat mengirim pesan langsung ke admin platform
 
 ---
 
-## ⚙️ Persyaratan Sistem & Instalasi
+## 🛠️ Teknologi
 
-Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (versi 18+) dan [pnpm](https://pnpm.io/) di perangkat Anda.
+| Layer | Stack |
+|-------|-------|
+| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, React 19) |
+| **Styling** | [TailwindCSS v4](https://tailwindcss.com/) + Vanilla CSS |
+| **Database** | [Neon PostgreSQL](https://neon.tech/) (Serverless) |
+| **ORM** | [Drizzle ORM](https://orm.drizzle.team/) |
+| **Auth** | JWT Session (`jose`) + bcryptjs |
+| **UI Components** | [Ant Design v6](https://ant.design/), [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/) |
+| **State Management** | [TanStack Query v5](https://tanstack.com/query) |
+| **Validation** | [Zod v4](https://zod.dev/) |
+| **Alerts** | [SweetAlert2](https://sweetalert2.github.io/) |
+| **Package Manager** | [pnpm](https://pnpm.io/) |
+
+---
+
+## ⚙️ Instalasi & Setup
+
+### Prasyarat
+- Node.js 18+
+- pnpm (`npm install -g pnpm`)
+- Akun [Neon](https://neon.tech/) (database serverless gratis)
 
 ### 1. Kloning Repositori
 ```bash
@@ -36,71 +46,105 @@ cd e-cbt
 ```
 
 ### 2. Instal Dependensi
-Proyek ini menggunakan **pnpm** sebagai package manager:
 ```bash
 pnpm install
 ```
 
-### 3. Konfigurasi Environment Variables
-Salin file `.env.example` menjadi `.env` baru:
-```bash
-cp .env.example .env
-```
-
-Buka file `.env` dan lengkapi nilai variabel berikut menggunakan informasi dari dashboard Appwrite Console Anda:
+### 3. Konfigurasi Environment
+Buat file `.env.local` di root proyek:
 ```env
-NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
-NEXT_PUBLIC_APPWRITE_PROJECT_ID=id_project_anda
-NEXT_APPWRITE_KEY=api_key_secret_anda
-```
-> ⚠️ **PENTING**: Pastikan API Key (`NEXT_APPWRITE_KEY`) yang Anda buat memiliki hak akses penuh (scopes) untuk **users** dan **databases**.
+# Neon PostgreSQL Connection String
+DATABASE_URL=postgresql://<user>:<password>@<host>/neondb?sslmode=require
 
-### 4. Inisialisasi Database Appwrite
-Jalankan skrip otomatis berikut untuk membuat database, collections, atribut, dan aturan perizinan (permissions) di Appwrite Anda secara otomatis:
+# JWT Secret (buat string acak minimal 32 karakter)
+JWT_SECRET=your_super_secret_jwt_key_here
+```
+
+### 4. Push Schema Database
 ```bash
-node scripts/setup-appwrite.js
+pnpm drizzle-kit push
 ```
 
-### 5. Jalankan Development Server
-Setelah inisialisasi selesai, jalankan server lokal:
+### 5. Buat Akun Admin
+```bash
+npx tsx create-admin-pg.ts
+```
+> Script ini menggunakan `pg` (TCP SSL) yang kompatibel di semua environment termasuk WSL.
+
+### 6. Jalankan Development Server
 ```bash
 pnpm dev
 ```
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat hasilnya.
+Buka [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 📂 Struktur Folder Proyek
+## 📂 Struktur Proyek
 
 ```text
 e-cbt/
-├── app/                  # Next.js App Router (Halaman & Layout)
-│   ├── (home)/           # Landing page & Auth publik
-│   ├── admin/            # Dashboard & Panel Admin
-│   ├── user/             # Dashboard & Jurnal User/Pasien
-│   └── auth/             # Halaman penanganan autentikasi
-├── components/           # Reusable UI Components
-├── lib/                  # Helper & Integrasi Appwrite (Client & Server)
-├── public/               # Asset statis (Gambar, SVG, dll)
-├── scripts/              # Skrip setup otomatis (setup-appwrite.js)
-├── .env.example          # Template konfigurasi environment
-├── README.md             # Dokumentasi proyek
-└── package.json          # Dependensi & Skrip proyek
+├── app/                    # Next.js App Router
+│   ├── (home)/             # Landing page & Auth publik
+│   ├── admin/              # Dashboard & Panel Admin
+│   ├── user/               # Dashboard & Jurnal User
+│   ├── auth/               # Halaman autentikasi
+│   └── actions/            # Server Actions (login, jurnal, pesan)
+├── components/             # Reusable UI Components
+├── lib/
+│   ├── db/
+│   │   ├── index.ts        # Drizzle client instance
+│   │   └── schema.ts       # Schema tabel (profiles, jurnals, comments, messages)
+│   ├── utils.ts            # Helper utilities
+│   └── zod.ts              # Skema validasi Zod
+├── public/                 # Asset statis
+├── create-admin-pg.ts      # Script seeding akun admin
+├── .env.local              # Environment variables (tidak di-commit)
+└── package.json
 ```
 
 ---
 
-## 📄 Skrip yang Tersedia
+## 📜 Skrip yang Tersedia
 
-Dalam file `package.json`, Anda dapat menjalankan:
+| Perintah | Fungsi |
+|----------|--------|
+| `pnpm dev` | Jalankan server pengembangan lokal |
+| `pnpm build` | Build aplikasi untuk produksi |
+| `pnpm start` | Jalankan hasil build |
+| `pnpm lint` | Periksa kualitas kode dengan ESLint |
+| `pnpm drizzle-kit push` | Push schema ke database Neon |
+| `pnpm drizzle-kit studio` | Buka Drizzle Studio (DB GUI) |
+| `npx tsx create-admin-pg.ts` | Buat akun admin pertama |
 
-- `pnpm dev` : Menjalankan server pengembangan lokal.
-- `pnpm build` : Membangun aplikasi Next.js untuk produksi.
-- `pnpm start` : Menjalankan aplikasi hasil build untuk produksi.
-- `pnpm lint` : Menjalankan ESLint untuk memeriksa kualitas kode.
+---
+
+## 📦 Riwayat Rilis
+
+### v0.3.0 — Migrasi Database & Hardening Auth *(Juli 2026)*
+- 🔄 **Migrasi penuh** dari Appwrite ke **Neon PostgreSQL** menggunakan **Drizzle ORM**
+- 🔐 Refaktor autentikasi dari Appwrite Auth ke **JWT session** mandiri (`jose` + `bcryptjs`)
+- ✅ Penerapan **Zod v4** untuk validasi ketat di semua Server Actions
+- 🐛 Fix: `cookies()` async di Next.js 16 (sync call menyebabkan runtime error)
+- 🐛 Fix: build-time database connection error dengan fallback URI
+- ⚙️ Hapus konfigurasi Prisma (sisa migrasi) dari `package.json`
+- 🛠️ Tambah script `create-admin-pg.ts` — seeder admin via `pg` TCP SSL (kompatibel WSL)
+
+### v0.2.0 — Dashboard Lengkap & Autentikasi *(Juni 2026)*
+- ✨ Implementasi autentikasi lengkap (login, register, signout)
+- 📋 Dashboard Admin: lihat & kelola jurnal, pesan, dan komentar pengguna
+- 📝 Dashboard User: buat & hapus jurnal CBT, kirim pesan ke admin
+- 🔒 RBAC via label `admin` di Appwrite
+- 💬 Sistem komentar admin pada jurnal pengguna
+- ⚡ Loading states terstandarisasi di seluruh halaman
+
+### v0.1.0 — Inisialisasi Proyek *(Mei 2026)*
+- 🎉 Initial release: quiz engine CBT, struktur App Router Next.js
+- 🎨 Implementasi UI *dark-mode glassmorphism*
+- 🔗 Integrasi awal dengan Appwrite (Auth & Database)
+- 📄 Template environment variables & dokumentasi awal
 
 ---
 
 ## 🔒 Lisensi
 
-Proyek ini dibuat untuk keperluan medis & terapi kognitif elektronik yang aman. Silakan merujuk pada kebijakan privasi data medis sebelum mendistribusikan secara komersial.
+Proyek ini dikembangkan untuk keperluan terapi perilaku kognitif berbasis digital. Perhatikan regulasi privasi data medis sebelum mendistribusikan secara komersial.
