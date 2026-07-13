@@ -120,28 +120,7 @@ e-cbt/
 
 ## 📦 Riwayat Rilis
 
-### v0.3.0 — Migrasi Database & Hardening Auth *(Juli 2026)*
-- 🔄 **Migrasi penuh** dari Appwrite ke **Neon PostgreSQL** menggunakan **Drizzle ORM**
-- 🔐 Refaktor autentikasi dari Appwrite Auth ke **JWT session** mandiri (`jose` + `bcryptjs`)
-- ✅ Penerapan **Zod v4** untuk validasi ketat di semua Server Actions
-- 🐛 Fix: `cookies()` async di Next.js 16 (sync call menyebabkan runtime error)
-- 🐛 Fix: build-time database connection error dengan fallback URI
-- ⚙️ Hapus konfigurasi Prisma (sisa migrasi) dari `package.json`
-- 🛠️ Tambah script `create-admin-pg.ts` — seeder admin via `pg` TCP SSL (kompatibel WSL)
-
-### v0.2.0 — Dashboard Lengkap & Autentikasi *(Juni 2026)*
-- ✨ Implementasi autentikasi lengkap (login, register, signout)
-- 📋 Dashboard Admin: lihat & kelola jurnal, pesan, dan komentar pengguna
-- 📝 Dashboard User: buat & hapus jurnal CBT, kirim pesan ke admin
-- 🔒 RBAC via label `admin` di Appwrite
-- 💬 Sistem komentar admin pada jurnal pengguna
-- ⚡ Loading states terstandarisasi di seluruh halaman
-
-### v0.1.0 — Inisialisasi Proyek *(Mei 2026)*
-- 🎉 Initial release: quiz engine CBT, struktur App Router Next.js
-- 🎨 Implementasi UI *dark-mode glassmorphism*
-- 🔗 Integrasi awal dengan Appwrite (Auth & Database)
-- 📄 Template environment variables & dokumentasi awal
+Lihat [changelog.md](./changelog.md) untuk riwayat lengkap perubahan setiap versi.
 
 ---
 
