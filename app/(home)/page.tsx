@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import Contact from './contact/page'
-import { ArrowRight, ShieldCheck, Heart, Users } from 'lucide-react'
+import { ArrowRight, ShieldCheck, Heart, Users, Sparkles, BadgeCheck } from 'lucide-react'
 
 export default function Home() {
     return (
         <div className='min-h-screen overflow-hidden' id='Home'>
             {/* Hero Section */}
-            <section className='relative flex items-center justify-center pt-40 pb-32 px-4'>
+            <section className='relative flex items-center justify-center pt-40 pb-32 px-4' id='Home'>
                 {/* Background decorative gradients */}
                 <div className="absolute top-0 left-1/4 w-72 h-72 lg:w-96 lg:h-96 bg-primary/40 rounded-full mix-blend-screen filter blur-[100px] opacity-70"></div>
                 <div className="absolute top-20 right-1/4 w-72 h-72 lg:w-96 lg:h-96 bg-secondary/20 rounded-full mix-blend-screen filter blur-[100px] opacity-70"></div>
@@ -14,34 +14,49 @@ export default function Home() {
                 <div className='container relative z-10 mx-auto max-w-6xl'>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                         <div className='flex flex-col space-y-6 text-center lg:text-left'>
-                            <div className="inline-flex items-center justify-center lg:justify-start space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 w-fit mx-auto lg:mx-0 backdrop-blur-sm">
+                            <div className="inline-flex items-center justify-center lg:justify-start space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 w-fit mx-auto lg:mx-0 backdrop-blur-sm animate-slide-down">
                                 <ShieldCheck className="w-4 h-4 text-secondary" />
                                 <span className="text-slate-300 text-xs md:text-sm font-medium tracking-wide">Platform Anti-Bullying Terpercaya</span>
                             </div>
-                            
-                            <h1 className='font-bold text-5xl lg:text-7xl leading-tight text-white tracking-tight font-sans'>
-                                Selamat Datang di <br />
-                                <span className="bg-gradient-to-r from-secondary to-[#d3ccff] bg-clip-text text-transparent">E-CBT</span>
+
+                            <h1 className='font-bold text-5xl lg:text-6xl leading-tight text-white tracking-tight font-sans animate-fade-in-up' style={{ animationDelay: '0.2s' }}>
+                                Kamu Tidak Sendiri
+                                <span className="block bg-gradient-to-r from-secondary to-[#d3ccff] bg-clip-text text-transparent">
+                                    Bersama E-CBT
+                                </span>
                             </h1>
-                            
-                            <p className='text-slate-300 text-lg font-light leading-relaxed max-w-2xl mx-auto lg:mx-0'>
-                                Electronic Cognitive Behavioral Therapy (E-CBT) hadir sebagai ruang aman bagi siswa-siswi. Kami memberikan panduan penanganan masalah dan wadah terpercaya untuk bercerita.
+
+                            <p className='text-slate-300 text-lg font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-fade-in-up' style={{ animationDelay: '0.4s' }}>
+                                Electronic Cognitive Behavioral Therapy (E-CBT) hadir sebagai ruang aman bagi siswa-siswi. Di sini, kami menemani setiap langkahmu untuk bercerita, memahami perasaan, dan tumbuh dengan lebih tenang.
                             </p>
-                            
-                            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                                <Link href="/start" className='group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-primary bg-secondary rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(179,170,255,0.4)] w-full sm:w-auto'>
-                                    Mulai Sekarang
+
+                            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+                                <Link href="/start" className='group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-primary bg-secondary rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(179,170,255,0.4)] w-full sm:w-auto'>
+                                    <span className="absolute inset-0 rounded-full border-2 border-secondary/40 animate-pulse-ring"></span>
+                                    Mulai Perjalananmu
                                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
-                                <Link href="#About" className='px-8 py-4 font-medium text-slate-300 hover:text-white transition-colors duration-300 w-full sm:w-auto'>
+                                <Link href="#About" className='px-8 py-4 font-medium text-slate-300 border border-white/10 bg-white/5 backdrop-blur-sm rounded-full hover:text-white hover:border-secondary/40 transition-all duration-300 w-full sm:w-auto'>
                                     Pelajari Lebih Lanjut
                                 </Link>
                             </div>
+
+                            <div className="pt-4 hidden md:flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-400 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+                                <span className="inline-flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-secondary" />100% Rahasia</span>
+                                <span className="text-secondary/40">•</span>
+                                <span className="inline-flex items-center gap-2"><Sparkles className="w-4 h-4 text-secondary" />Bebas Biaya</span>
+                                <span className="text-secondary/40">•</span>
+                                <span className="inline-flex items-center gap-2"><BadgeCheck className="w-4 h-4 text-secondary" />Didukung Ahli</span>
+                            </div>
                         </div>
-                        
-                        <div className="relative w-full h-[350px] lg:h-[500px] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group mt-10 lg:mt-0 hidden md:block">
-                            <div className='absolute inset-0 bg-hero-image bg-cover bg-center transition-transform duration-700 group-hover:scale-110'></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#13072e] via-transparent to-transparent opacity-90"></div>
+
+                        <div className="relative hidden md:block w-full h-[350px] lg:h-[500px] mt-10 lg:mt-0">
+                            <div className="hero-orb animate-float-slow w-96 h-96 bg-secondary/25 -top-10 -left-10"></div>
+                            <div className="hero-orb animate-float-slower w-80 h-80 bg-primary/40 top-1/3 right-0"></div>
+                            <div className="hero-orb animate-float-slowest w-72 h-72 bg-[#d3ccff]/15 bottom-0 left-1/4"></div>
+                            <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-secondary/10"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
