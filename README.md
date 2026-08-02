@@ -120,6 +120,14 @@ e-cbt/
 
 ## 📦 Riwayat Rilis
 
+### v0.4.0 — Redesign Homepage Hero *(Agustus 2026)*
+- ✨ Redesign hero section homepage dengan pendekatan **"Lingkaran Tenang"** — visual breathing orbs yang menenangkan
+- 💬 Heading empatik baru: **"Kamu Tidak Sendiri / Bersama E-CBT"**
+- 🔘 CTA primary **"Mulai Perjalananmu"** dengan efek pulse-ring lembut
+- 🪟 CTA secondary "Pelajari Lebih Lanjut" dengan outline glassmorphism
+- ✅ Trust bar baru: **100% Rahasia • Bebas Biaya • Didukung Ahli** (tersembunyi di mobile)
+- 🎬 Animasi entrance bertahap (staggered fade-in) yang menghormati `prefers-reduced-motion`
+
 ### v0.3.0 — Migrasi Database & Hardening Auth *(Juli 2026)*
 - 🔄 **Migrasi penuh** dari Appwrite ke **Neon PostgreSQL** menggunakan **Drizzle ORM**
 - 🔐 Refaktor autentikasi dari Appwrite Auth ke **JWT session** mandiri (`jose` + `bcryptjs`)
