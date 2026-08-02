@@ -30,7 +30,7 @@ Grid 2 kolom (desktop) tetap dipertahankan:
 1. **Badge** — "Platform Anti-Bullying Terpercaya" dengan `ShieldCheck` icon (dipertahankan).
 2. **Heading** — ganti menjadi kalimat pendek empatik:
    - Line 1: **"Kamu Tidak Sendiri"**
-   - Line 2: **"E-CBT"** dengan gradient `from-secondary to-[#d3ccff]`
+   - Line 2: **"Bersama E-CBT"** dengan gradient `from-secondary to-[#d3ccff]`
 3. **Subtext** — kalimat naratif menenangkan yang menjelaskan E-CBT.
 4. **CTA primary** — **"Mulai Perjalananmu"** dengan pulse ring.
 5. **CTA secondary** — **"Pelajari Lebih Lanjut"** dengan outline glass.

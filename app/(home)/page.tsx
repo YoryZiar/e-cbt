@@ -4,7 +4,7 @@ import { ArrowRight, ShieldCheck, Heart, Users, Sparkles, BadgeCheck } from 'luc
 
 export default function Home() {
     return (
-        <div className='min-h-screen overflow-hidden' id='Home'>
+        <div className='min-h-screen overflow-hidden'>
             {/* Hero Section */}
             <section className='relative flex items-center justify-center pt-40 pb-32 px-4' id='Home'>
                 {/* Background decorative gradients */}
